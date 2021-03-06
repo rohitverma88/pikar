@@ -1,0 +1,213 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Lab Test Listing</h1>
+      <form class="d-none d-sm-inline-block form-inline ml-auto ml-md-3 my-2 my-md-0 mw-100 w-25" [formGroup]="searchForm">
+         <div class="input-group">
+            <input type="text" class="form-control small" placeholder="Search for..." aria-label="Search" formControlName="search">
+            <div class="input-group-append">
+               <button class="btn btn-primary" type="button">
+               <i class="fa fa-search fa-sm"></i>
+               </button>
+            </div>
+         </div>
+      </form>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm ml-auto" [routerLink]="['/app/orders/lab-test/ace-lab-test']" [queryParams]="{ type: 'add'}"><i class="fa fa-plus" aria-hidden="true"></i> Book Lab Test</button>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1" data-toggle="modal" data-target="#filterModal"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1" (click)="exportFile()"><i class="fa fa-filter" aria-hidden="true"></i> Export List</button>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(!!rows) && !(!!pages)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+       <div class="row pb-4" *ngIf="!!rows && !!pages">
+         <div class="col-xl-12 col-lg-12">
+            <div>
+               <small>
+                  <a href="javascript:void(0)" (click)="removeFilters()">Clear All Filters</a>
+                </small>
+            </div>
+            <div class="card shadow mb-4 order-listing">
+               <ngx-datatable
+                  #myTable
+                  class="material striped expandable "
+                  [rows]="rows"
+                  [columnMode]="ColumnMode.force"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [rowHeight]="auto"
+                  [loadingIndicator]="loadingIndicator"
+                  [externalPaging]="true"
+                  [count]="pages.totalCount"
+                  [offset]="pages.currentPage"
+                  [limit]="pages.pageSize"
+                  (page)="setPage($event)"
+                  >
+                  <ngx-datatable-column name="S No" prop="s_no" [width]="100" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Booking ID" prop="bookingId" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Booking Type" prop="bookingType" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Booking Date" prop="bookingDate" [sortable]=false [width]="190">
+                     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span>{{row?.bookingDate}}</span>
+                     </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Amount" prop="amount" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Status" prop="status" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Vendor ID" prop="vendorId" [sortable]=false></ngx-datatable-column>
+
+                  <ngx-datatable-column name="Action" prop="actions" [sortable]=false [width]="120">
+                     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <!-- [VIEW,CANCEL] -->
+                           <div class="dropdown order-options dropleft">
+                              <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fa fa-ellipsis-h  fa-2x" aria-hidden="true"></i>
+                              </button>
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                 <a class="dropdown-item" *ngFor="let item of row?.actions;">
+                                    <button *ngIf="item === 'view'" class="btn btn-sm btn-outline-secondary w-100" (click)="viewOrder(row)">View</button>
+                                    <button *ngIf="item === 'cancel'" class="btn btn-sm btn-outline-secondary w-100" (click)="cancelBooking(row)">Cancel</button>
+                                 </a>
+                              </div>
+                           </div>
+                     </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-footer *ngIf="!!pages.totalCount">
+                     <ng-template
+                        ngx-datatable-footer-template
+                        let-rowCount="rowCount"
+                        let-pageSize="pageSize"
+                        let-count="totalCount"
+                        let-selectedCount="selectedCount"
+                        let-curPage="curPage"
+                        let-offset="offset"
+                        >
+                        <div class="w-25" style="padding: 5px 10px">
+                           <div> Showing {{((curPage - 1) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} order of {{rowCount}} Orders </div>
+                        </div>
+                        <datatable-pager
+                        [pagerLeftArrowIcon]="'datatable-icon-left'"
+                        [pagerRightArrowIcon]="'datatable-icon-right'"
+                        [pagerPreviousIcon]="'datatable-icon-prev'"
+                        [pagerNextIcon]="'datatable-icon-skip'"
+                        [page]="curPage"
+                        [size]="pageSize"
+                        [count]="rowCount"
+                        [hidden]="!((rowCount / pageSize) > 1)"
+                        (change)="setPage($event)">
+                        </datatable-pager>
+                     </ng-template>
+                  </ngx-datatable-footer>
+               </ngx-datatable>
+            </div>
+         </div>
+      </div>
+</div>
+<!-- Below code is for Filter Popup -->
+<div class="modal fade" id="filterModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <form class="user" (ngSubmit)="submitFilter(filterObj)">
+         <div class="modal-header">
+            <h5 class="modal-title" id="filterModalLabel">Filter</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div *ngIf="!!filterObj">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!orderStatusData && orderStatusData.length > 0">
+                     <label for="status">Order Status</label>
+                     <ng-select
+                     [options]="orderStatusData"
+                     bindValue="value"
+                     bindLabel="label"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     name="status"
+                     id="status"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="filterObj.status"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!orderChannelData && orderChannelData.length > 0">
+                     <label for="channel">Channel</label>
+                     <ng-select
+                     [options]="orderChannelData"
+                     bindValue="value"
+                     bindLabel="label"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     name="channel"
+                     id="channel"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="filterObj.channel"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!modeOfPaymentDropDownData && modeOfPaymentDropDownData.length > 0">
+                     <label for="mode_of_payment">Payment Mode</label>
+                     <ng-select
+                     [options]="modeOfPaymentDropDownData"
+                     bindValue="value"
+                     bindLabel="label"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     name="mode_of_payment"
+                     id="mode_of_payment"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="filterObj.mode_of_payment"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!statusOfPaymentDropDownData && statusOfPaymentDropDownData.length > 0">
+                     <label for="status_of_payment">Status of Payment</label>
+                     <ng-select
+                     [options]="statusOfPaymentDropDownData"
+                     bindValue="value"
+                     bindLabel="label"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     name="status_of_payment"
+                     id="status_of_payment"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="filterObj.status_of_payment"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="updated">Order Creation Date</label>
+                     <input class="form-control" placeholder="Select Date" [maxDate]="maxDate" [bsConfig]="{ containerClass: 'theme-dark-blue', isAnimated: true, showCustomRangeLabel: true }" bsDaterangepicker name="updatedAt" ranges="this.dateRangePickerRange" [(ngModel)]="filterObj.date">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-secondary w-25" type="submit">Apply</button>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

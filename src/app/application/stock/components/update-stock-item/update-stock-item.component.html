@@ -1,0 +1,185 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">Update Stock Items</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/stock/']"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(addstockForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="addstockForm" #addForm="ngForm" (ngSubmit)="onSubmit(addForm)" *ngIf="addstockForm">
+         <div class="card shadow mb-4 ss-custom-ng-select">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="providerId">Provider<span>*</span></label>
+                     <ng-select
+                     [multiple]="false"
+                     [items]="serverSideproviderItems"
+                     [(ngModel)]="selectedprovider"
+                     placeholder="Search Provider eg: test"
+                     bindLabel="accountId"
+                     bindValue="accountId"
+                     [typeahead]="providerTypehead"
+                     formControlName="providerId"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && addStockcheckout.providerId.errors }" (change)="getValues()">
+                     <ng-template ng-typetosearch-tmp>
+                         <div class="ng-option disabled">
+                             Please type provider name...
+                         </div>
+                     </ng-template>
+                     <!-- <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            Fetching data for "{{searchTerm}}"
+                        </div>
+                    </ng-template> -->
+                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                         <div class="ng-option disabled">
+                           Fetching data for "{{searchTerm}}"
+                         </div>
+                     </ng-template>
+                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div style="margin: 5px 0;" class="card">
+                            <div class="card-body p-2">
+                                <h5 class="card-title" [ngOptionHighlight]="search">Provider Name: <strong>{{item.name}}</strong></h5>
+                                <h6 class="card-subtitle mb-2 text-muted">User Type : {{item.userType}} || Account ID: {{!!item.accountId && item.accountId !== '' ? item.accountId : 'NA'}}</h6>
+                            </div>
+                        </div>
+                    </ng-template>
+                    </ng-select>
+                    <div *ngIf="submitted && addStockcheckout.providerId.errors" class="invalid-feedback">
+                        <div *ngIf="addStockcheckout.providerId.errors.required">Provider is required</div>
+                     </div>
+                     <p class="my-3" *ngIf="!!selectedprovider && selectedprovider !== ''"> Selected Provider: {{selectedprovider}}</p>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="lastUnitsSell">Update Type</label>
+                     <div class="d-flex">
+                        <div class="mx-2">
+                           <input id="add" type="radio" value="ADD" name="updateType" formControlName="updateType">
+                           <label for="add" class="mx-1">ADD</label>
+                        </div>
+                        <div class="mx-2">
+                           <input id="spend" type="radio" value="SPEND" name="updateType" formControlName="updateType">
+                           <label for="spend" class="mx-1">SPEND</label>
+                        </div>
+                        <div class="mx-2">
+                           <input id="move" type="radio" value="MOVE" name="updateType" formControlName="updateType">
+                           <label for="move" class="mx-1">MOVE</label>
+                        </div>
+                     </div>
+                     <div *ngIf="submitted && addStockcheckout.updateType.errors">
+                         <div *ngIf="addStockcheckout.updateType.errors.required">Please select either value</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="addstockForm.value.updateType === 'MOVE'">
+                     <label for="targetProviderId">Targeted Provider ID</label>
+                     <ng-select
+                     [multiple]="false"
+                     [items]="serverSidetargetproviderItems"
+                     [(ngModel)]="selectedtargetprovider"
+                     placeholder="Search Target Provider eg: test"
+                     bindLabel="accountId"
+                     bindValue="accountId"
+                     [typeahead]="targetproviderTypehead"
+                     formControlName="targetProviderId"
+                     class="form-control bg-light custom">
+                     <ng-template ng-typetosearch-tmp>
+                         <div class="ng-option disabled">
+                             Please type provider name...
+                         </div>
+                     </ng-template>
+                     <!-- <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            Fetching data for "{{searchTerm}}"
+                        </div>
+                    </ng-template> -->
+                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                         <div class="ng-option disabled">
+                           Fetching data for "{{searchTerm}}"
+                         </div>
+                     </ng-template>
+                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div style="margin: 5px 0;" class="card">
+                            <div class="card-body p-2">
+                                <h5 class="card-title" [ngOptionHighlight]="search">Provider Name: <strong>{{item.name}}</strong></h5>
+                                <h6 class="card-subtitle mb-2 text-muted">User Type : {{item.userType}} || Account ID: {{!!item.accountId && item.accountId !== '' ? item.accountId : 'NA'}}</h6>
+                            </div>
+                        </div>
+                    </ng-template>
+                    </ng-select>
+                     <p class="my-3" *ngIf="!!selectedtargetprovider && selectedtargetprovider !== ''"> Targeted Provider: {{selectedtargetprovider}}</p>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="sku">Product SKU<span>*</span></label>
+                     <ng-select
+                     [multiple]="false"
+                     [items]="serverSideSKUItems"
+                     [(ngModel)]="selectedSKU"
+                     placeholder="Search Stock Details eg: 123456"
+                     bindLabel="productId"
+                     bindValue="productId"
+                     [typeahead]="productTypehead"
+                     formControlName="sku"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && addStockcheckout.sku.errors }">
+                     <ng-template ng-typetosearch-tmp>
+                         <div class="ng-option disabled">
+                             Please type the SKU ID...
+                         </div>
+                     </ng-template>
+                     <!-- <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            Fetching data for "{{searchTerm}}"
+                        </div>
+                    </ng-template> -->
+                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                         <div class="ng-option disabled">
+                           Fetching data for "{{searchTerm}}"
+                         </div>
+                     </ng-template>
+                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div style="margin: 5px 0;" class="card">
+                            <div class="card-body p-2">
+                                <h5 class="card-title" [ngOptionHighlight]="search">Product SKU: <strong>{{!!item.productName && item.productName !== '' ? item.productName : 'NA'}}</strong></h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Category : {{item.category}} || Product SKU: {{!!item.productId && item.productId !== '' ? item.productId : 'NA'}}</h6>
+                            </div>
+                        </div>
+                    </ng-template>
+                    </ng-select>
+                    <div *ngIf="submitted && addStockcheckout.sku.errors" class="invalid-feedback">
+                        <div *ngIf="addStockcheckout.sku.errors.required">SKU is required</div>
+                     </div>
+                     <p class="my-3" *ngIf="!!selectedSKU && selectedSKU !== ''"> Selected SKU: {{selectedSKU}}</p>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="units">Units<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="units" placeholder="10" formControlName="units" [ngClass]="{ 'is-invalid': submitted && addStockcheckout.units.errors }">
+                     <div *ngIf="submitted && addStockcheckout.units.errors" class="invalid-feedback">
+                        <div *ngIf="addStockcheckout.units.errors.required">Units is required</div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

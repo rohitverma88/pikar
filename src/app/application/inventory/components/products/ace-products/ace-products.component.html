@@ -1,0 +1,434 @@
+<!-- Add Vendor -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4" *ngIf="!!productDataFormType && productDataFormType !== ''">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">{{productDataFormType}} Product</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/inventory/products']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(productdetailsForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="productdetailsForm" #vendorForm="ngForm" (ngSubmit)="onSubmit(vendorForm)" *ngIf="productdetailsForm">
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!vendorListData && vendorListData.length > 0">
+                     <label for="vendorId">Vendor<span>*</span></label>
+                     <ng-select
+                     [options]="vendorListData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="true"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Vendor"
+                     clearAllText="Clear"
+                     formControlName="vendorId"
+                     name="vendorId"
+                     id="vendorId"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && productcheckout.vendorId.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && productcheckout.vendorId.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.vendorId.errors.required">Vendor is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!mainCategoryDropdownData && mainCategoryDropdownData.length > 0">
+                     <label for="category">Category<span>*</span></label>
+                     <ng-select
+                     [options]="mainCategoryDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     formControlName="category"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="category"
+                     id="category"
+                     class="form-control bg-light custom"
+                     (ngModelChange)="getCategoryByid(productdetailsForm.value.category, null)"
+                     [ngClass]="{ 'is-invalid': submitted && productcheckout.category.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && productcheckout.category.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.category.errors.required">Category is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!categoryDropdownData && categoryDropdownData.length > 0">
+                     <label for="subcategory">Sub Category<span>*</span></label>
+                     <ng-select
+                     [options]="categoryDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Sub Category"
+                     clearAllText="Clear"
+                     formControlName="subcategory"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="subcategory"
+                     id="subcategory"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && productcheckout.subcategory.errors }"
+                     >
+                     </ng-select>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="productName">Product Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="productName" placeholder="Dettol-10ml" formControlName="productName" [ngClass]="{ 'is-invalid': submitted && productcheckout.productName.errors }">
+                     <div *ngIf="submitted && productcheckout.productName.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.productName.errors.required">Name is required</div>
+                        <div *ngIf="productcheckout.productName.errors.pattern">Name should be alphanumeric and - symbol allowed.</div>
+                        <div *ngIf="productcheckout.productName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="productShortName">Product Short Name</label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="productShortName" placeholder="Name" formControlName="productShortName" [ngClass]="{ 'is-invalid': submitted && productcheckout.productShortName.errors }">
+                     <div *ngIf="submitted && productcheckout.productShortName.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.productShortName.errors.pattern">Name should be alphanumeric and - symbol allowed.</div>
+                        <div *ngIf="productcheckout.productShortName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="brandName">Brand Name<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="brandName" placeholder="Cipla" formControlName="brandName" [ngClass]="{ 'is-invalid': submitted && productcheckout.brandName.errors }">
+                     <div *ngIf="submitted && productcheckout.brandName.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.brandName.errors.required">Brand Name is required</div>
+                        <div *ngIf="productcheckout.brandName.errors.pattern">Name should be alphanumeric and - symbol allowed.</div>
+                        <div *ngIf="productcheckout.brandName.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="upc">Universal Product Code</label>
+                     <input type="text" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="upc" placeholder="USDJS9832983" formControlName="upc">
+                     <!-- <div *ngIf="submitted && productcheckout.upc.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.upc.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="productcheckout.upc.errors.minlength">Should be minimum 10 characters</div>
+                     </div> -->
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="hsnno">HSN No</label>
+                     <input type="text" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="hsnno" placeholder="123299129" formControlName="HSN">
+                     <!-- <div *ngIf="submitted && productcheckout.HSN.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.HSN.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="productcheckout.HSN.errors.minlength">Should be minimum 10 characters</div>
+                     </div> -->
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!productTargetUserDropDownData && productTargetUserDropDownData.length > 0">
+                     <label for="targetedUser">Targeted User</label>
+                     <ng-select
+                     [options]="productTargetUserDropDownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Targeted User"
+                     clearAllText="Clear"
+                     formControlName="targetedUser"
+                     name="targetedUser"
+                     id="targetedUser"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && productcheckout.targetedUser.errors }"
+                     >
+                     </ng-select>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!productPackagingTypeDropDownData && productPackagingTypeDropDownData.length > 0">
+                     <label for="packagingType">Packaging Type<span>*</span></label>
+                     <ng-select
+                     [options]="productPackagingTypeDropDownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Packaging Type"
+                     clearAllText="Clear"
+                     formControlName="packagingType"
+                     name="packagingType"
+                     id="packagingType"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && productcheckout.packagingType.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && productcheckout.packagingType.errors" class="invalid-feedback">
+                        <!-- <div *ngIf="productcheckout.packagingType.errors.required">Packing Type is required</div> -->
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="packageSize">Package Size<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="30" class="form-control bg-light" id="packageSize" placeholder="23 Inches." formControlName="packageSize" [ngClass]="{ 'is-invalid': submitted && productcheckout.packageSize.errors }">
+                     <div *ngIf="submitted && productcheckout.packageSize.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.packageSize.errors.pattern">Should be alphanumeric and . symbol allowed</div>
+                        <div *ngIf="productcheckout.packageSize.errors.minlength">Should be minimum 1 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="weight">Weight (in grams)<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="10" class="form-control bg-light" id="weight" placeholder="15.5" formControlName="weight" [ngClass]="{ 'is-invalid': submitted && productcheckout.weight.errors }">
+                     <div *ngIf="submitted && productcheckout.weight.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.weight.errors.required">Weight is required</div>
+                        <div *ngIf="productcheckout.weight.errors.minlength">Should be minimum 2 numbers</div>
+                        <div *ngIf="productcheckout.weight.errors.pattern">Only decimals/numbers</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="mrp">MRP<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="mrp" placeholder="23" formControlName="mrp" [ngClass]="{ 'is-invalid': submitted && productcheckout.mrp.errors }">
+                     <div *ngIf="submitted && productcheckout.mrp.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.mrp.errors.required">MRP is required</div>
+                        <div *ngIf="productcheckout.mrp.errors.pattern">Only decimals/numbers</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="costToCompany">Purchase Price<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="costToCompany" placeholder="400" formControlName="costToCompany" [ngClass]="{ 'is-invalid': submitted && productcheckout.costToCompany.errors }">
+                     <div *ngIf="submitted && productcheckout.costToCompany.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.costToCompany.errors.pattern">Should be only numeric/decimal</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="gst">GST(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="5" class="form-control bg-light" id="gst" placeholder="18.00" formControlName="gst" [ngClass]="{ 'is-invalid': submitted && productcheckout.gst.errors }">
+                     <div *ngIf="submitted && productcheckout.gst.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.gst.errors.required">GST is required</div>
+                        <div *ngIf="productcheckout.gst.errors.pattern">GST is invalid</div>
+                        <div *ngIf="productcheckout.gst.errors.minlength">GST should be minimum 1 digits</div>
+                        <div *ngIf="productcheckout.gst.errors.maxlength">GST should be maximum 5 digits</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="totalMargin">Total Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="5" class="form-control bg-light" id="totalMargin" placeholder="12" formControlName="totalMargin" [ngClass]="{ 'is-invalid': submitted && productcheckout.totalMargin.errors }">
+                     <div *ngIf="submitted && productcheckout.totalMargin.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.totalMargin.errors.required">Total Margin(%) is required</div>
+                        <div *ngIf="productcheckout.totalMargin.errors.pattern">Total Margin(%) is invalid</div>
+                        <div *ngIf="productcheckout.totalMargin.errors.minlength">Total Margin(%) should be minimum 1 digits</div>
+                        <div *ngIf="productcheckout.totalMargin.errors.maxlength">Total Margin(%) should be maximum 5 digits</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="vendorSku">Vendor SKU</label>
+                     <input type="text" minlength="2" maxlength="30" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="vendorSku" placeholder="JI88" formControlName="vendorSku" [ngClass]="{ 'is-invalid': submitted && productcheckout.vendorSku.errors }">
+                     <div *ngIf="submitted && productcheckout.vendorSku.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.vendorSku.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="productcheckout.vendorSku.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="variant">Variant<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="30" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="variant" placeholder="IP9" formControlName="variant" [ngClass]="{ 'is-invalid': submitted && productcheckout.variant.errors }">
+                     <div *ngIf="submitted && productcheckout.variant.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.variant.errors.required">Variant is required</div>
+                        <div *ngIf="productcheckout.variant.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="SS_Margin">SS Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="5" class="form-control bg-light" id="SS_Margin" placeholder="12" formControlName="SS_Margin" [ngClass]="{ 'is-invalid': submitted && productcheckout.SS_Margin.errors }">
+                     <div *ngIf="submitted && productcheckout.SS_Margin.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.SS_Margin.errors.required">SS Margin is required</div>
+                        <div *ngIf="productcheckout.SS_Margin.errors.pattern">SS Margin is invalid</div>
+                        <div *ngIf="productcheckout.SS_Margin.errors.minlength">SS Margin should be minimum 1 digits</div>
+                        <div *ngIf="productcheckout.SS_Margin.errors.maxlength">SS Margin should be maximum 5 digits</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="SSP_Margin">SSP Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="5" class="form-control bg-light" id="SSP_Margin" placeholder="43" formControlName="SSP_Margin" [ngClass]="{ 'is-invalid': submitted && productcheckout.SSP_Margin.errors }">
+                     <div *ngIf="submitted && productcheckout.SSP_Margin.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.SSP_Margin.errors.required">SSP Margin is required</div>
+                        <div *ngIf="productcheckout.SSP_Margin.errors.pattern">SSP Margin is invalid</div>
+                        <div *ngIf="productcheckout.SSP_Margin.errors.minlength">SSP Margin should be minimum 1 digits</div>
+                        <div *ngIf="productcheckout.SSP_Margin.errors.maxlength">SSP Margin should be maximum 5 digits</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="vendorStockUnits">Vendor Stock Units</label>
+                     <input type="text" class="form-control bg-light" id="vendorStockUnits" placeholder="10" formControlName="vendorStockUnits" [ngClass]="{ 'is-invalid': submitted && productcheckout.vendorStockUnits.errors }">
+                     <div *ngIf="submitted && productcheckout.vendorStockUnits.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.vendorStockUnits.errors.pattern">Vendor Stock Units is invalid</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="localStockUnits">Local Stock Units</label>
+                     <input type="text" class="form-control bg-light" id="localStockUnits" placeholder="80" formControlName="localStockUnits" [ngClass]="{ 'is-invalid': submitted && productcheckout.localStockUnits.errors }">
+                     <div *ngIf="submitted && productcheckout.localStockUnits.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.localStockUnits.errors.pattern">Local Stock Units is invalid</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="col-md-3">
+                     <div class="d-block"><label class="control-label">Is product available?</label></div>
+                     <div class="d-flex">
+                        <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="isAvailable" id="availableYes" [value]='true' formControlName="isAvailable"/>
+                           <label class="custom-control-label" for="availableYes">Yes</label>
+                         </div>
+                         <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="isAvailable" id="availableNo" [value]='false' formControlName="isAvailable"/>
+                           <label class="custom-control-label" for="availableNo">No</label>
+                         </div>
+                     </div>
+                     <div class="d-block">
+                        <div class="py-1" *ngIf="submitted && productcheckout.isAvailable.errors">
+                           <p class="text-danger error-message m-0" *ngIf="productcheckout.isAvailable.errors.required">Please select one option</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="ingredients">Ingredients<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Calcium" id="ingredients" formControlName="ingredients" name="ingredients" [ngClass]="{ 'is-invalid': submitted && productcheckout.ingredients.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.ingredients.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.ingredients.errors.required">Ingredients is required</div>
+                        <div *ngIf="productcheckout.ingredients.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="effect">Product Side Effects<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="2" maxlength="1000" placeholder="NA" id="effect" formControlName="effect" name="effect" [ngClass]="{ 'is-invalid': submitted && productcheckout.effect.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.effect.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.effect.errors.required">Side Effects be blank</div>
+                        <div *ngIf="productcheckout.effect.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="indication">Product Indications<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Daily" id="indication" formControlName="indication" name="indication" [ngClass]="{ 'is-invalid': submitted && productcheckout.indication.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.indication.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.indication.errors.required">Indications is required</div>
+                        <div *ngIf="productcheckout.indication.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="productDescription">Product Description<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Decription" id="productDescription" formControlName="productDescription" name="productDescription" [ngClass]="{ 'is-invalid': submitted && productcheckout.productDescription.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.productDescription.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.productDescription.errors.required">Description is required</div>
+                        <div *ngIf="productcheckout.productDescription.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="tags">Tags<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="500" placeholder="Cough" id="tags" formControlName="tags" name="tags" [ngClass]="{ 'is-invalid': submitted && productcheckout.tags.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.tags.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.tags.errors.required">Tags is required</div>
+                        <div *ngIf="productcheckout.tags.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="direction">Product Direction<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Direction for use" id="direction" formControlName="direction" name="direction" [ngClass]="{ 'is-invalid': submitted && productcheckout.direction.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.direction.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.direction.errors.required">Direction is required</div>
+                        <div *ngIf="productcheckout.direction.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="productusage">Product Usage</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Daily" id="productusage" formControlName="productusage" name="productusage" [ngClass]="{ 'is-invalid': submitted && productcheckout.productusage.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.productusage.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.productusage.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="highlights">Product Highlights<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="NA" id="highlights" formControlName="highlights" name="highlights" [ngClass]="{ 'is-invalid': submitted && productcheckout.highlights.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.highlights.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.highlights.errors.required">Cannot be blank</div>
+                        <div *ngIf="productcheckout.highlights.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="action">Product Action</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Headache" id="action" formControlName="action" name="action" [ngClass]="{ 'is-invalid': submitted && productcheckout.action.errors }"></textarea>
+                     <div *ngIf="submitted && productcheckout.action.errors" class="invalid-feedback">
+                        <div *ngIf="productcheckout.action.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label>Add Product Image</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInput.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInput multiple type="file" (change)="fileProgressproducts($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="productImage">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadproductimg" (change)="fileProgressproducts($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="productImage">
+                        <label class="custom-file-label bg-light" for="uploadproductimg">Choose file...</label>
+                     </div> -->
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="d-flex flex-wrap">
+                     <div class="m-1" *ngFor="let url of previewUrlproductimg;let index = index">
+                        <div class="text-center">
+                           <img [src]="url" alt="Product Image" class="view-thumbnail-img">
+                        </div>
+                        <div class="text-center">
+                           <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedFile(index)"><i class="fa fa-trash"></i></button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="d-flex flex-wrap" *ngIf="(!!productDetails && !!productDetails.productImages && productDetails.productImages.length != 0) && productDataFormType !== 'add'">
+                     <div class="m-1" *ngFor="let item of productDetails?.productImages;">
+                        <img [src]="item" alt="Product Image" class="view-thumbnail-img">
+                        <div class="text-center">
+                           <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="deleteImage(item)"><i class="fa fa-trash"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <p class="text-muted" *ngIf="(!!productDetails && !!productDetails.productImages && productDetails.productImages.length != 0) && productDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

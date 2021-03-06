@@ -1,0 +1,171 @@
+<!-- Add Vendor -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">Add Stock</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/stock/']"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(addstockForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="addstockForm" #addForm="ngForm" (ngSubmit)="onSubmit(addForm)" *ngIf="addstockForm">
+         <div class="card shadow mb-4 ss-custom-ng-select">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="productSku">Product SKU<span>*</span></label>
+                     <ng-select
+                     [multiple]="false"
+                     [items]="serverSideSKUItems"
+                     [(ngModel)]="selectedSKU"
+                     (ngModelChange)="getSelectedProduct(selectedSKU)"
+                     placeholder="Search Stock Details eg: 123456"
+                     bindLabel="productId"
+                     bindValue="productId"
+                     [typeahead]="productTypehead"
+                     formControlName="productSku"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && addStockcheckout.productSku.errors }" (change)="getValues()">
+                     <ng-template ng-typetosearch-tmp>
+                         <div class="ng-option disabled">
+                             Please type the SKU ID...
+                         </div>
+                     </ng-template>
+                     <!-- <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            Fetching data for "{{searchTerm}}"
+                        </div>
+                    </ng-template> -->
+                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                         <div class="ng-option disabled">
+                           Fetching data for "{{searchTerm}}"
+                         </div>
+                     </ng-template>
+                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div style="margin: 5px 0;" class="card">
+                            <div class="card-body p-2">
+                                <h5 class="card-title" [ngOptionHighlight]="search">Product SKU: <strong>{{!!item.productName && item.productName !== '' ? item.productName : 'NA'}}</strong></h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Category : {{item.category}} || Product SKU: {{!!item.productId && item.productId !== '' ? item.productId : 'NA'}}</h6>
+                            </div>
+                        </div>
+                    </ng-template>
+                    </ng-select>
+                    <div *ngIf="submitted && addStockcheckout.productSku.errors" class="invalid-feedback">
+                        <div *ngIf="addStockcheckout.productSku.errors.required">SKU is required</div>
+                     </div>
+                     <p class="my-3" *ngIf="!!selectedSKU && selectedSKU !== ''"> Selected SKU: {{selectedSKU}}</p>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="lastUnitsSell">Last Unit Sell</label>
+                     <input type="text" class="form-control bg-light" id="lastUnitsSell" placeholder="0" formControlName="lastUnitsSell">
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="lastSoldBy">Last Sold By</label>
+                     <input type="text" class="form-control bg-light" id="lastSoldBy" placeholder="XYZ Medicos" formControlName="lastSoldBy">
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="stock">Provider<span>*</span></label>
+                     <ng-select
+                     [multiple]="false"
+                     [items]="serverSideproviderItems"
+                     [(ngModel)]="selectedprovider"
+                     (ngModelChange)="getSelectedprovider(selectedprovider)"
+                     placeholder="Search Stock Provider eg: test"
+                     bindLabel="accountId"
+                     bindValue="accountId"
+                     [typeahead]="providerTypehead"
+                     formControlName="stock"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && addStockcheckout.stock.errors }">
+                     <ng-template ng-typetosearch-tmp>
+                         <div class="ng-option disabled">
+                             Please type provider name...
+                         </div>
+                     </ng-template>
+                     <!-- <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            Fetching data for "{{searchTerm}}"
+                        </div>
+                    </ng-template> -->
+                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                         <div class="ng-option disabled">
+                           Fetching data for "{{searchTerm}}"
+                         </div>
+                     </ng-template>
+                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div style="margin: 5px 0;" class="card">
+                            <div class="card-body p-2">
+                                <h5 class="card-title" [ngOptionHighlight]="search">Provider Name: <strong>{{item.name}}</strong></h5>
+                                <h6 class="card-subtitle mb-2 text-muted">User Type : {{item.userType}} || Account ID: {{!!item.accountId && item.accountId !== '' ? item.accountId : 'NA'}}</h6>
+                            </div>
+                        </div>
+                    </ng-template>
+                    </ng-select>
+                    <div *ngIf="submitted && addStockcheckout.stock.errors" class="invalid-feedback">
+                        <div *ngIf="addStockcheckout.stock.errors.required">Provider is required</div>
+                     </div>
+                     <p class="my-3" *ngIf="!!selectedprovider && selectedprovider !== ''"> Selected Provider: {{selectedprovider}}</p>
+                  </div>
+               </div>
+               <div class="form-row" *ngIf="!!selectedProviderDetails && selectedProviderDetails !== ''">
+                  <div class="form-group col-md-12">
+                     <div class="card p-4">
+                        <div class="table-responsive-sm">
+                           <table class="table table-bordered">
+                              <tbody>
+                                 <tr>
+                                    <td>
+                                       <span><strong>Provider ID</strong></span>
+                                    </td>
+                                    <td>
+                                       <span><strong>Provider Type</strong></span>
+                                    </td>
+                                    <td>
+                                       <span><strong>Available Units</strong></span>
+                                    </td>
+                                    <td>
+                                       <span><strong>Total Units Sale</strong></span>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>
+                                       <span>{{!!selectedProviderDetails.accountId && selectedProviderDetails.accountId !== '' ? selectedProviderDetails.accountId : 'NA'}}</span>
+                                    </td>
+                                    <td>
+                                       <span>{{!!selectedProviderDetails.userType && selectedProviderDetails.userType !== '' ? selectedProviderDetails.userType : 'NA'}}</span>
+                                    </td>
+                                    <td>
+                                       <input type="text" class="form-control bg-light" placeholder="eg: 10" [(ngModel)]="available_units" [ngModelOptions]="{standalone: true}">
+                                    </td>
+                                    <td>
+                                       <input type="text" class="form-control bg-light" placeholder="eg: 8" [(ngModel)]="total_unit_sale" [ngModelOptions]="{standalone: true}">
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

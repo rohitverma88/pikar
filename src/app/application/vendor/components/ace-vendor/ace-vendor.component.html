@@ -1,0 +1,557 @@
+<!-- Add Vendor -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4" *ngIf="!!vendorDataFormType && vendorDataFormType !== ''">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">{{vendorDataFormType}} Vendor</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/vendor/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(vendordetailsForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="vendordetailsForm" #vendorForm="ngForm" (ngSubmit)="onSubmit(vendorForm)" *ngIf="vendordetailsForm">
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!typeDropdownData && typeDropdownData.length > 0">
+                     <label for="vendortype">Vendor Type<span>*</span></label>
+                     <ng-select
+                     [options]="typeDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Vendor type"
+                     clearAllText="Clear"
+                     formControlName="type"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="type"
+                     id="type"
+                     class="form-control bg-light custom"
+                     (ngModelChange)="getCategoryByid(vendordetailsForm.value.type)"
+                     [ngClass]="{ 'is-invalid': submitted && vendorcheckout.type.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && vendorcheckout.type.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.type.errors.required">Type is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!(!!categoryDropdownData && categoryDropdownData.length > 0)">
+                     <label for="vendorcategorytemp">Vendor Category<span>*</span></label>
+                     <ng-select
+                     [disabled] = true
+                     placeholder="Select Category"
+                     name="category"
+                     id="vendorcategorytemp"
+                     class="form-control bg-light custom"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!categoryDropdownData && categoryDropdownData.length > 0">
+                     <label for="vendorcategory">Vendor Category<span>*</span></label>
+                     <ng-select
+                     [options]="categoryDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     formControlName="category"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="category"
+                     id="vendorcategory"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && vendorcheckout.category.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && vendorcheckout.category.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.category.errors.required">Category is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!serviceDropdownData && serviceDropdownData.length > 0">
+                     <label for="services">Services<span>*</span></label>
+                     <ng-select
+                     [options]="serviceDropdownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="true"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Services"
+                     clearAllText="Clear"
+                     formControlName="services"
+                     name="services"
+                     id="services"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && vendorcheckout.services.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && vendorcheckout.services.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.services.errors.required">Service is required</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="vendorname">Vendor Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="vendorname" placeholder="John Doe" formControlName="vendorName" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.vendorName.errors }">
+                     <div *ngIf="submitted && vendorcheckout.vendorName.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.vendorName.errors.required">Name is required</div>
+                        <div *ngIf="vendorcheckout.vendorName.errors.minlength">Name should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="vendormob">Vendor Mobile<span>*</span></label>
+                     <div class="input-group">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text bg-light" id="mobilecodeprepend">+91</span>
+                        </div>
+                        <input type="text" minlength="10" maxlength="10" class="form-control bg-light" id="vendormob" placeholder="Mob." aria-describedby="mobilecodeprepend" formControlName="mobile" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.mobile.errors }">
+                        <div *ngIf="submitted && vendorcheckout.mobile.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.mobile.errors.required">Mobile No. is required</div>
+                           <div *ngIf="vendorcheckout.mobile.errors.pattern">Mobile No. is Invalid</div>
+                           <div *ngIf="vendorcheckout.mobile.errors.minlength">Mobile No. should be minimum 10 digits</div>
+                           <div *ngIf="vendorcheckout.mobile.errors.maxlength">Mobile No. should be maximum 10 digits</div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="vendoremail">Vendor Email<span>*</span></label>
+                     <input type="email" class="form-control bg-light" id="vendoremail" placeholder="Email" formControlName="officialEmail" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.officialEmail.errors }">
+                     <div *ngIf="submitted && vendorcheckout.officialEmail.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.officialEmail.errors.required">Email is required</div>
+                        <div *ngIf="vendorcheckout.officialEmail.errors.email">Email is invalid</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="landlineContactNumber">Landline Number<small>&nbsp; (Including STD Code)</small></label>
+                     <input type="text" class="form-control bg-light" id="landlineContactNumber" placeholder="011-22616161" formControlName="landlineContactNumber" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.landlineContactNumber.errors }">
+                     <div *ngIf="submitted && vendorcheckout.landlineContactNumber.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.landlineContactNumber.errors.pattern">Only Numbers allowed without space, STD code separated by -(hyphen)</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="secondarymobile">Secondary Mobile Number</label>
+                     <div class="input-group">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text bg-light" id="secondarymobilecodeprepend">+91</span>
+                        </div>
+                        <input type="text" minlength="10" maxlength="10" class="form-control bg-light" id="secondarymobile" placeholder="Mob." aria-describedby="secondarymobilecodeprepend" formControlName="secondaryMobile" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.secondaryMobile.errors }">
+                        <div *ngIf="submitted && vendorcheckout.secondaryMobile.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.secondaryMobile.errors.pattern">Mobile No. is Invalid</div>
+                           <div *ngIf="vendorcheckout.secondaryMobile.errors.minlength">Mobile No. should be minimum 10 digits</div>
+                           <div *ngIf="vendorcheckout.secondaryMobile.errors.maxlength">Mobile No. should be maximum 10 digits</div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="personalemail">Person Email</label>
+                     <input type="email" class="form-control bg-light" id="personalemail" placeholder="Email" formControlName="personalEmail" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.personalEmail.errors }">
+                     <div *ngIf="submitted && vendorcheckout.personalEmail.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.personalEmail.errors.email">Email is invalid</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="address1">Address 1<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="120" class="form-control bg-light" id="address1" placeholder="Street Address 1" formControlName="street_address_1" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.street_address_1.errors }">
+                     <div *ngIf="submitted && vendorcheckout.street_address_1.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.street_address_1.errors.required">Address Line 1 is required</div>
+                        <div *ngIf="vendorcheckout.street_address_1.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="address2">Address 2<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="120" class="form-control bg-light" id="address2" placeholder="Street Address 2" formControlName="street_address_2" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.street_address_2.errors }">
+                     <div *ngIf="submitted && vendorcheckout.street_address_2.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.street_address_2.errors.required">Address Line 2 is required</div>
+                        <div *ngIf="vendorcheckout.street_address_2.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="city">City<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="city" placeholder="City" formControlName="city" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.city.errors }">
+                     <div *ngIf="submitted && vendorcheckout.city.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.city.errors.required">City is required</div>
+                        <div *ngIf="vendorcheckout.city.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="vendorcheckout.city.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="state">State/ UT<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="state" placeholder="State" formControlName="state" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.state.errors }">
+                     <div *ngIf="submitted && vendorcheckout.state.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.state.errors.required">State is required</div>
+                        <div *ngIf="vendorcheckout.state.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="vendorcheckout.state.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="country">Country<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="country" placeholder="India" formControlName="country" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.country.errors }">
+                     <div *ngIf="submitted && vendorcheckout.country.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.country.errors.required">Country is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="pincode">Pincode<span>*</span></label>
+                     <input type="text" minlength="6" maxlength="6" class="form-control bg-light" id="pincode" placeholder="Pincode" formControlName="pincode" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.pincode.errors }">
+                     <div *ngIf="submitted && vendorcheckout.pincode.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.pincode.errors.required">Pincode is required</div>
+                        <div *ngIf="vendorcheckout.pincode.errors.pattern">Pincode is invalid</div>
+                        <div *ngIf="vendorcheckout.pincode.errors.minlength">Pincode should be minimum 6 digits</div>
+                        <div *ngIf="vendorcheckout.pincode.errors.maxlength">Pincode should be maximum 6 digits</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="contactpersonname">Contact Person Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="contactpersonname" placeholder="Name" formControlName="contactPersonName" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.contactPersonName.errors }">
+                     <div *ngIf="submitted && vendorcheckout.contactPersonName.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.contactPersonName.errors.required">Contact Person Name is required</div>
+                        <div *ngIf="vendorcheckout.contactPersonName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="vendorcheckout.contactPersonName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="certificationdate">Date of Certification<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="certificationdate" placeholder="DD-MM-YYYY" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }" [maxDate]="today" formControlName="certificationDate" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.certificationDate.errors }">
+                     <div *ngIf="submitted && vendorcheckout.certificationDate.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.certificationDate.errors.required">Date is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="certificationno">Certification No.<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="certificationno" oninput="this.value = this.value.toUpperCase()" placeholder="Certification No." formControlName="certificationNumber" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.certificationNumber.errors }">
+                     <div *ngIf="submitted && vendorcheckout.certificationNumber.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.certificationNumber.errors.required">Certification Number is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="certificateauthority">Certification Authority<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="certificateauthority" oninput="this.value = this.value.toUpperCase()" placeholder="Certification Authority" formControlName="certificationAuthorties" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.certificationAuthorties.errors }">
+                     <div *ngIf="submitted && vendorcheckout.certificationAuthorties.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.certificationAuthorties.errors.required">Certification Authority is required</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="gstinno">GSTIN No</label>
+                     <input type="text" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="gstinno" placeholder="GSTIN No" formControlName="gstNumber" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.gstNumber.errors }">
+                     <div *ngIf="submitted && vendorcheckout.gstNumber.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.gstNumber.errors.pattern">No Space / Special Characters allowed</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="pancardno">PAN Card<span>*</span></label>
+                     <input type="text" minlength="10" maxlength="15" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="pancardno" placeholder="ABHDE0000UT" formControlName="panCard" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.panCard.errors }">
+                     <div *ngIf="submitted && vendorcheckout.panCard.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.panCard.errors.required">PanCard No. is required</div>
+                        <div *ngIf="vendorcheckout.panCard.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="vendorcheckout.panCard.errors.minlength">Should be minimum 10 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="margin">Margin</label>
+                     <input type="text" class="form-control bg-light" id="margin" placeholder="18%" formControlName="defaultDiscountPercentage" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.defaultDiscountPercentage.errors }">
+                     <div *ngIf="submitted && vendorcheckout.defaultDiscountPercentage.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.defaultDiscountPercentage.errors.pattern">Should be only numeric/decimal</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="bankname">Bank Name<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="bankname" placeholder="Bank Name" formControlName="bankName" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.bankName.errors }">
+                     <div *ngIf="submitted && vendorcheckout.bankName.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.bankName.errors.required">Bank Name is required</div>
+                        <div *ngIf="vendorcheckout.bankName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="vendorcheckout.bankName.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-2">
+                     <label for="bankbranch">Bank Branch<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="bankbranch" placeholder="Bank Branch" formControlName="branchName" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.branchName.errors }">
+                     <div *ngIf="submitted && vendorcheckout.branchName.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.branchName.errors.required">Bank Branch Name is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-2">
+                     <label for="bankcity">Branch City<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="bankcity" placeholder="City" formControlName="branchcity" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.branchcity.errors }">
+                     <div *ngIf="submitted && vendorcheckout.branchcity.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.branchcity.errors.required">City is required</div>
+                        <div *ngIf="vendorcheckout.branchcity.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="vendorcheckout.branchcity.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="ifsccode">IFSC Code<span>*</span></label>
+                     <input type="text" minlength="5" maxlength="15" class="form-control bg-light" id="ifsccode" oninput="this.value = this.value.toUpperCase()" placeholder="IFSC Code" formControlName="ifsc" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.ifsc.errors }">
+                     <div *ngIf="submitted && vendorcheckout.ifsc.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.ifsc.errors.required">IFSC is required</div>
+                        <div *ngIf="vendorcheckout.ifsc.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="vendorcheckout.ifsc.errors.minlength">Should be minimum 5 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="accountholder">Account Holder’s Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="accountholder" placeholder="Account Holder’s Name" formControlName="holderName" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.holderName.errors }">
+                     <div *ngIf="submitted && vendorcheckout.holderName.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.holderName.errors.required">Account Holder Name is required</div>
+                        <div *ngIf="vendorcheckout.holderName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="vendorcheckout.holderName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="accountnumber">Account Number<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="accountnumber" placeholder="123-456-8910-1122" formControlName="accountNumber" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.accountNumber.errors }">
+                     <div *ngIf="submitted && vendorcheckout.accountNumber.errors" class="invalid-feedback">
+                        <div *ngIf="vendorcheckout.accountNumber.errors.required">Account No. is required</div>
+                        <div *ngIf="vendorcheckout.accountNumber.errors.pattern">Should contain only numbers</div>
+                        <div *ngIf="vendorcheckout.accountNumber.errors.minlength">Should be minimum 2 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="upiid">UPI ID</label>
+                     <input type="text" class="form-control bg-light" id="upiid" placeholder="abc@oksbi" formControlName="UPIId">
+                  </div>
+               </div>
+               <div class="form-check">
+                  <div class="form-group m-auto">
+                     <input type="checkbox" formControlName="panelRequired" id="panelRequired" class="form-check-input"/>
+                     <label for="panelRequired" class="form-check-label">Panel Required</label>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label>Upload PAN Card Document</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputPancard.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputPancard multiple type="file" (change)="fileProgresspancard($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="pancardFile">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadpancard" (change)="fileProgresspancard($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="pancardFile" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.pancardFile.errors }">
+                        <label class="custom-file-label bg-light" for="uploadpancard">Choose file...</label>
+                        <div *ngIf="submitted && vendorcheckout.pancardFile.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.pancardFile.errors.required">PAN Card should be uploaded</div>
+                        </div>
+                     </div> -->
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlpancard;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="Pancard Doc" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="Pancard Doc" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedPancard(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!vendorDetails && !!vendorDetails.panCardUrl && vendorDetails.panCardUrl.length != 0) && vendorDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of vendorDetails?.panCardUrl;">
+                           <img [src]="item" alt="Pancard Image" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="Pancard Doc" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label>Upload GSTIN Document</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputGST.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputGST multiple type="file" (change)="fileProgressgst($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="gstDocumentFile">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadgstindoc" (change)="fileProgressgst($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="gstDocumentFile" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.gstDocumentFile.errors }">
+                        <label class="custom-file-label bg-light" for="uploadgstindoc">Choose file...</label>
+                        <div *ngIf="submitted && vendorcheckout.gstDocumentFile.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.gstDocumentFile.errors.required">GSTIN Proof Doc required.</div>
+                        </div>
+                     </div> -->
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlgst;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedGSTFile(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!vendorDetails && !!vendorDetails.gstNumberUrl && vendorDetails.gstNumberUrl.length != 0) && vendorDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of vendorDetails?.gstNumberUrl;">
+                           <img [src]="item" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label>Upload Certificate Document</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputcertificate.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputcertificate multiple type="file" (change)="fileProgresscertificate($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="regCertificateFile">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadcertificatedoc" (change)="fileProgresscertificate($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="regCertificateFile" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.regCertificateFile.errors }">
+                        <label class="custom-file-label bg-light" for="uploadcertificatedoc">Choose file...</label>
+                        <div *ngIf="submitted && vendorcheckout.regCertificateFile.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.regCertificateFile.errors.required">Certificate Proof Required.</div>
+                        </div>
+                     </div> -->
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlcertificate;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="Certificate Document" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="Certificate Document" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedCertificate(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!vendorDetails && !!vendorDetails.certificationUrl && vendorDetails.certificationUrl.length != 0) && vendorDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of vendorDetails?.certificationUrl;">
+                           <img [src]="item" alt="Certificate Document" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="Certificate Document" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <p class="text-muted" *ngIf="vendorDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label>Upload Vendor Logo</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputlogo.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputlogo type="file" (change)="fileProgressvendorlogo($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="vendorLogo">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" class="custom-file-input" id="uploadvendorlogo" (change)="fileProgressvendorlogo($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="vendorLogo" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.vendorLogo.errors }">
+                        <label class="custom-file-label bg-light" for="uploadvendorlogo">Choose file...</label>
+                        <div *ngIf="submitted && vendorcheckout.vendorLogo.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.vendorLogo.errors.required">Vendor Logo is required.</div>
+                        </div>
+                     </div> -->
+                     <div class="d-flex flex-wrap" *ngIf="!(previewUrlvendorlogo && previewUrlvendorlogo !== '') && vendorDataFormType !== 'add'">
+                        <div class="m-1">
+                           <div class="text-center">
+                              <img src="../../../../../assets/img/dummy.png" alt="Profile Picture" class="view-thumbnail-img">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="previewUrlvendorlogo && previewUrlvendorlogo !== ''">
+                        <div class="m-1">
+                           <div class="text-center">
+                              <img [src]="previewUrlvendorlogo" alt="Vendor Logo" class="view-thumbnail-img">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedvendorlogo()"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label>Upload Vendor Profile Photo</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputprofilepic.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputprofilepic type="file" (change)="fileProgressvendorprofphoto($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="profilePhoto">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" class="custom-file-input" id="uploadvendorprofilephoto" (change)="fileProgressvendorprofphoto($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="profilePhoto" [ngClass]="{ 'is-invalid': submitted && vendorcheckout.profilePhoto.errors }">
+                        <label class="custom-file-label bg-light" for="uploadvendorprofilephoto">Choose file...</label>
+                        <div *ngIf="submitted && vendorcheckout.profilePhoto.errors" class="invalid-feedback">
+                           <div *ngIf="vendorcheckout.profilePhoto.errors.required">Vendor Profile Pic is required.</div>
+                        </div>
+                     </div> -->
+                     <div class="d-flex flex-wrap" *ngIf="!(previewUrlprofphoto && previewUrlprofphoto !== '') && vendorDataFormType !== 'add'">
+                        <div class="m-1">
+                           <div class="text-center">
+                              <img src="../../../../../assets/img/dummy.png" alt="Profile Picture" class="view-thumbnail-img">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="previewUrlprofphoto && previewUrlprofphoto !== ''">
+                        <div class="m-1">
+                           <div class="text-center">
+                              <img [src]="previewUrlprofphoto" alt="Profile Picture" class="view-thumbnail-img">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedprofphoto()"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label>Upload Other Document</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputotherdoc.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputotherdoc multiple type="file" (change)="fileProgressotherdoc($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="otherDocs">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadotherdocs" (change)="fileProgressotherdoc($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="otherDocs">
+                        <label class="custom-file-label bg-light" for="uploadotherdocs">Choose file...</label>
+                     </div> -->
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlotherdocs;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="Other Document" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="Other Document" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedOtherdoc(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!vendorDetails && !!vendorDetails.otherDocumentsUrl && vendorDetails.otherDocumentsUrl.length != 0) && vendorDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of vendorDetails?.otherDocumentsUrl;">
+                           <img [src]="item" alt="Other Document" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="Other Document" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <p class="text-muted" *ngIf="vendorDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+               </div>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

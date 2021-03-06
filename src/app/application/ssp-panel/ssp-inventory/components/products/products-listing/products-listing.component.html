@@ -1,0 +1,234 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Products Listing</h1>
+      <form class="d-none d-sm-inline-block form-inline ml-auto ml-md-3 my-2 my-md-0 mw-100 w-25" [formGroup]="searchForm">
+         <div class="input-group">
+            <input type="text" class="form-control small" placeholder="Search Products..." aria-label="Search" formControlName="search">
+            <div class="input-group-append">
+               <button class="btn btn-primary" type="button">
+               <i class="fa fa-search fa-sm"></i>
+               </button>
+            </div>
+         </div>
+      </form>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1 ml-auto" data-toggle="modal" data-target="#filterModal"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+      <!-- <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1" data-toggle="modal" data-target="#exceluploadModal" (click)="importFile()"><i class="fa fa-filter" aria-hidden="true"></i> Import Product</button> -->
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1" (click)="exportFile()"><i class="fa fa-filter" aria-hidden="true"></i> Export List</button>
+      <!-- <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/inventory/products/add-edit-products']" [queryParams]="{ type: 'add'}"><i class="fa fa-plus" aria-hidden="true"></i> Add New Product</button> -->
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(!!rows) && !(!!pages)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+       <div class="row pb-4" *ngIf="!!rows && !!pages">
+         <div class="col-xl-12 col-lg-12">
+            <div>
+               <small>
+                  <a href="javascript:void(0)" (click)="removeFilters()">Clear All Filters</a>
+                </small>
+            </div>
+            <div class="card shadow mb-4">
+               <ngx-datatable
+                  class="material striped"
+                  [rows]="rows"
+                  [columnMode]="ColumnMode.force"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [rowHeight]="auto"
+                  [loadingIndicator]="loadingIndicator"
+                  [externalPaging]="true"
+                  [count]="pages.totalCount"
+                  [offset]="pages.currentPage"
+                  [limit]="pages.pageSize"
+                  (page)="setPage($event)"
+                  >
+                  <ngx-datatable-column name="Sr No." prop="s_no" [width]="60" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Product ID" prop="productId" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Product Name" prop="productName" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Category" prop="category" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Brand" prop="brandName" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Availability" prop="availabilityStatus" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="MRP" prop="mrp" [sortable]=false></ngx-datatable-column>
+                  <ngx-datatable-column name="Stock Units" prop="inStock" [sortable]=false>
+                     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span>{{row.stock[0].available_units}}</span>
+                     </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Actions" prop="product_id" [sortable]=false [width]="250">
+                     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span class="mx-1 "></span>
+                        <button class="btn btn-sm btn-primary mx-1" (click)="viewProduct(row)" data-toggle="tooltip" data-placement="bottom" title="View Product">View</button>
+                        <!-- <button class="btn btn-sm btn-outline-warning btn-icon mx-1" (click)="editProduct(row)" data-toggle="tooltip" data-placement="bottom" title="Edit Product"><i class="fa fa-edit"></i></button> 
+                        <button class="btn btn-sm btn-outline-success btn-icon mx-1" (click)="copyProduct(row)" data-toggle="tooltip" data-placement="bottom" title="Copy Category"><i class="fa fa-copy"></i></button>
+                        <button class="btn btn-sm btn-outline-danger btn-icon mx-1" (click)="deleteProduct(row)" data-toggle="tooltip" data-placement="bottom" title="Delete Product"><i class="fa fa-trash"></i></button> -->
+                     </ng-template>
+                  </ngx-datatable-column>
+                  <!-- <ngx-datatable-footer *ngIf="!!pages.totalCount"> -->
+                     <ngx-datatable-footer *ngIf="!!pages.totalCount">
+                        <ng-template
+                           ngx-datatable-footer-template
+                           let-rowCount="rowCount"
+                           let-pageSize="pageSize"
+                           let-count="totalCount"
+                           let-selectedCount="selectedCount"
+                           let-curPage="curPage"
+                           let-offset="offset"
+                           >
+                           <div class="w-25" style="padding: 5px 10px">
+                              <div> Showing {{((curPage - 1) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} order of {{rowCount}} Orders </div>
+                           </div>
+                           <datatable-pager
+                           [pagerLeftArrowIcon]="'datatable-icon-left'"
+                           [pagerRightArrowIcon]="'datatable-icon-right'"
+                           [pagerPreviousIcon]="'datatable-icon-prev'"
+                           [pagerNextIcon]="'datatable-icon-skip'"
+                           [page]="curPage"
+                           [size]="pageSize"
+                           [count]="rowCount"
+                           [hidden]="!((rowCount / pageSize) > 1)"
+                           (change)="setPage($event)">
+                           </datatable-pager>
+                        </ng-template>
+                     </ngx-datatable-footer>
+                  <!-- </ngx-datatable>
+                     <ng-template
+                        ngx-datatable-footer-template
+                        let-rowCount="rowCount"
+                        let-pageSize="pageSize"
+                        let-count="totalCount"
+                        let-selectedCount="selectedCount"
+                        let-curPage="curPage"
+                        let-offset="offset"
+                        >
+                        <div class="w-25" style="padding: 5px 10px">
+                           <div> Showing {{((curPage - 2) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} product of {{rowCount}} Products </div>
+                        </div>
+                        <datatable-pager
+                        [pagerLeftArrowIcon]="'datatable-icon-left'"
+                        [pagerRightArrowIcon]="'datatable-icon-right'"
+                        [pagerPreviousIcon]="'datatable-icon-prev'"
+                        [pagerNextIcon]="'datatable-icon-skip'"
+                        [page]="curPage - 1"
+                        [size]="pageSize"
+                        [count]="rowCount"
+                        [hidden]="!((rowCount / pageSize) > 1)"
+                        (change)="setPage($event)">
+                        </datatable-pager>
+                     </ng-template>
+                  </ngx-datatable-footer> -->
+               </ngx-datatable>
+            </div>
+         </div>
+      </div>
+</div>
+<!-- Below code is for product import -->
+<div class="modal fade" id="exceluploadModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exceluploadModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <form class="user" [formGroup]="excelUploadForm" *ngIf="excelUploadForm" novalidate #excelForm="ngForm" (ngSubmit)="onSubmit(excelForm)">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exceluploadModalLabel">Import Excel</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close" (click)="onReset()">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row pb-5">
+               <div class="col-xl-12 col-lg-12">
+                  <div class="form-row">
+                     <div class="form-group col-md-12 pt-4">
+                        <label>Upload Excel File<span>*</span></label>
+                        <div class="custom-file mb-4">
+                           <input type="file" class="custom-file-input" (change)="onSelectedFile($event)" data-max-size="32154" accept=".xlsx, .xls" id="uploadexcel" formControlName="file" name="file" [ngClass]="{ 'is-invalid': submitted && excelcheckout.file.errors }">
+                           <label class="custom-file-label bg-light" for="uploadexcel">Choose file...</label>
+                           <div *ngIf="submitted && excelcheckout.file.errors" class="invalid-feedback">
+                              <div *ngIf="excelcheckout.file.errors.required">Excel File should be uploaded</div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal" (click)="onReset()">Cancel</button>
+            <button class="btn btn-secondary w-25" type="submit">Submit</button>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>
+<!-- End of the above code -->
+<!-- Below code is for Filter Popup -->
+<div class="modal fade" id="filterModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <form class="user" (ngSubmit)="submitFilter(filterObj)">
+         <div class="modal-header">
+            <h5 class="modal-title" id="filterModalLabel">Filter</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div *ngIf="!!filterObj">
+               <!-- <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!mainCategoryDropdownData && mainCategoryDropdownData.length > 0">
+                     <label for="category">Category</label>
+                     <ng-select
+                     [options]="mainCategoryDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="category"
+                     id="category"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="filterObj.category"
+                     (ngModelChange)="getCategoryByid(filterObj.category)"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!categoryDropdownData && categoryDropdownData.length > 0">
+                     <label for="subcategory">Sub Category</label>
+                     <ng-select
+                     [options]="categoryDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Sub Category"
+                     clearAllText="Clear"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="subcategory"
+                     id="subcategory"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="filterObj.subcategory"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="updated">Updated At</label>
+                     <input class="form-control" placeholder="Select Date" [maxDate]="maxDate" [bsConfig]="{ containerClass: 'theme-dark-blue', isAnimated: true }" bsDaterangepicker name="updatedAt" [(ngModel)]="filterObj.date">
+                  </div>
+               </div> -->
+               <div class="form-row">
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="checkbox" id="instock" name="instock" value="true" [(ngModel)]="filterObj.instock">
+                     <label class="form-check-label" for="instock">Show only Instock Products</label>
+                   </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-secondary w-25" type="submit">Apply</button>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

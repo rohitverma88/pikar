@@ -1,0 +1,96 @@
+// Override Bootstrap default variables here
+// Do not edit any of the files in /vendor/bootstrap/scss/!
+
+// Color Variables
+// Bootstrap Color Overrides
+
+$gray-100: hsl(225, 40%, 98%) !default;
+$gray-200: #eaecf4 !default;
+$gray-300: #dddfeb !default;
+$gray-400: #d1d3e2 !default;
+$gray-500: #b7b9cc !default;
+$gray-600: #858796 !default;
+$gray-700: #6e707e !default;
+$gray-800: #5a5c69 !default;
+$gray-900: #3a3b45 !default;
+$black: #000 !default;
+
+
+// Primary Color Variables
+$primary-color1: #3F6E61;
+$primary-color2: #9DD4C4;
+$primary-color3: #D8EEE7;
+
+// Secondary Color Variables
+$secondary-color1: #45599B;
+$secondary-color2: #8B97C1;
+$secondary-color3: #D1D5E6;
+
+// White & Grey Color Variables
+$primary-white: #FFFFFF !default;
+$primary-grey1: #F1F1F1;
+$primary-grey2: #F2F2F2;
+$primary-grey3: #6E6E6E;
+$primary-grey4: #383838;
+// Grey Color Variables with Opacity
+$primary-grey5: rgba(110, 110, 110, 0.22);
+$primary-grey6: rgba(110, 110, 110, 0.87);
+$primary-grey7: rgba(11, 10, 7, 0.87);
+
+// Special Colors
+$special-red: #B00020 !default;
+$special-green: #306834 !default;
+$special-yellow: #FFBA49 !default;
+
+// Custom Colors
+$brand-google: #ea4335 !default;
+$brand-facebook: #3b5998 !default;
+
+// Set Contrast Threshold
+$yiq-contrasted-threshold: 195 !default;
+
+// Typography
+$body-color: $gray-600 !default;
+
+$font-family-rubik: 'Rubik', sans-serif;
+
+$font-weight-light: 300 !default;
+$font-weight-base: 400;
+$headings-font-weight: 400 !default;
+
+// Shadows
+$box-shadow-sm: 0 0.125rem 0.25rem 0 rgba($gray-900, .2) !default;
+$box-shadow: 0 0.15rem 1.75rem 0 rgba($gray-900, .15) !default;
+$box-shadow-lg: 0 1rem 3rem rgba($black, .175) !default;
+
+// Borders Radius
+$border-radius: 0.35rem !default;
+$border-color: darken($gray-200, 2%) !default;
+
+// Spacing Variables
+// Change below variable if the height of the navbar changes
+$topbar-base-height: 4.375rem !default;
+// Change below variable to change the width of the sidenav
+$sidebar-base-width: 14rem !default;
+// Change below variable to change the width of the sidenav when collapsed
+$sidebar-collapsed-width: 6.5rem !default;
+
+// Card
+$card-cap-bg: $gray-100 !default;
+$card-border-color: $border-color !default;
+
+// Adjust column spacing for symmetry
+$spacer: 1rem !default;
+$grid-gutter-width: $spacer * 1.5 !default;
+
+// Transitions
+$transition-collapse: height .15s ease !default;
+
+// Dropdowns
+$dropdown-font-size: 0.85rem !default;
+$dropdown-border-color: $border-color !default;
+
+// Images
+$login-image: '../img/sample.png' !default;
+$register-image: 'https://source.unsplash.com/Mv9hjnEUHR4/600x800' !default;
+$password-image: 'https://source.unsplash.com/oWTW-jNGl9I/600x800' !default;

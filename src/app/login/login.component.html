@@ -1,0 +1,91 @@
+<section class="d-flex align-items-center min-vh-100 bg-gradient-primary">
+  <div class="container">
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+
+    <div class="col-xl-10 col-lg-12 col-md-9">
+
+      <div class="card shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row no-gutters">
+            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+            <div class="col-lg-6">
+              <div class="p-5">
+                <div class="col-12 text-center">
+                  <img src="assets/img/logo.svg" width="150" height="100" />
+                </div>
+                <div class="text-center">
+                  <h1 class="h4 text-gray-900 mb-4">Admin Login</h1>
+                </div>
+                <div *ngIf="!showloginTypeForm">
+                  <form class="form-signin" [formGroup]="loginFormGroup" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" placeholder="Username" id="username" name="username" formControlName="username" [ngClass]="{ 'is-invalid': submitted && loginFormGroup.controls.username.errors }">
+                      <div *ngIf="submitted && loginFormGroup.controls.username.errors" class="invalid-feedback">
+                        <div *ngIf="loginFormGroup.controls.username.errors.required">Username is required</div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <input type="password" class="form-control form-control-user" placeholder="Password" id="password" name="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && loginFormGroup.controls.password.errors }">
+                      <div *ngIf="submitted && loginFormGroup.controls.password.errors" class="invalid-feedback">
+                        <div *ngIf="loginFormGroup.controls.password.errors.required">Password is required</div>
+                      </div>
+                    </div>
+                    <hr>
+                    <!-- <div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div> -->
+                    <button type="submit" class="btn btn-secondary btn-user btn-block mt-5">
+                      Login
+                    </button>
+                  </form>
+                  <!-- <div class="text-center pt-2">
+                    <a class="small" href="#">Forgot Password?</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="#">Create an Account!</a>
+                  </div> -->
+                </div>
+                <div *ngIf="!!showloginTypeForm">
+                  <form class="form-signin" [formGroup]="loginTypeFormGroup" #loginTypeForm="ngForm" (ngSubmit)="onloginTypeSubmit(loginTypeForm)" *ngIf="loginTypeFormGroup">
+                    <div class="form-group" *ngIf="!!rolesDropdownData && rolesDropdownData.length > 0">
+                      <label for="adminrole">Login Type<span>*</span></label>
+                      <ng-select
+                      [options]="rolesDropdownData"
+                      bindValue="value"
+                      bindLabel="label"
+                      [multiple]="false"
+                      [closeOnSelect]="false"
+                      [searchable]="false"
+                      placeholder="Select..."
+                      clearAllText="Clear"
+                      formControlName="roles"
+                      name="roles"
+                      id="adminrole"
+                      class="form-control bg-light custom"
+                      [ngClass]="{ 'is-invalid': typesubmitted && admintypeloginForm.roles.errors }"
+                      >
+                      </ng-select>
+                      <div *ngIf="typesubmitted && admintypeloginForm.roles.errors" class="invalid-feedback">
+                         <div *ngIf="admintypeloginForm.roles.errors.required">Admin Type is required</div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-user btn-block mt-5">Confirm</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</section>

@@ -1,0 +1,133 @@
+<!-- Sidebar for Admin -->
+<ul class="navbar-nav bg-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" *ngIf="userCurrentRole === userRoles.admin">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+     <div class="sidebar-brand-icon">
+        <img src="../../../../../assets/img/SS_Logo_Small.svg" class="w-25" alt="SmartSewa Logo">
+     </div>
+     <div class="sidebar-brand-text mx-3">
+        <img src="../../../../../assets/img/SS_Logo_White.svg" class="w-100 h-100" alt="SmartSewa Logo">
+     </div>
+  </a>
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+     <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0">
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link" href="#" [routerLink]="['./dashboard/']">
+     <i class="fa fa-desktop"></i>
+     <span>Dashboard</span></a>
+  </li>
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+  <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link collapsed" href="#" [routerLink]="['./vendor/']" [queryParams]="{ pageSize: 50, currentPage: 1}">
+     <i class="fa fa-industry"></i>
+     <span>Vendor</span>
+     </a>
+  </li>
+  <!-- Nav Item - Utilities Collapse Menu -->
+  <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInventory" aria-expanded="true" aria-controls="collapseInventory">
+     <i class="fa fa-fw fa-wrench"></i>
+     <span>Inventory</span>
+     </a>
+     <div id="collapseInventory" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="py-2 collapse-inner">
+           <h6 class="collapse-header">Inventory Components:</h6>
+           <a class="collapse-item" href="#" [routerLink]="['./inventory/products/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-list" aria-hidden="true"></i> &nbsp; Products</a>
+           <a class="collapse-item" href="#" [routerLink]="['./inventory/diagnostics/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-heartbeat" aria-hidden="true"></i> &nbsp; Diagnostics</a>
+           <a class="collapse-item" href="#" [routerLink]="['./inventory/medicine/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-medkit" aria-hidden="true"></i> &nbsp; Medicine</a>
+        </div>
+     </div>
+  </li>
+  <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" href="#" [routerLink]="['./stock/']">
+      <i class="fa fa-desktop"></i>
+      <span>Stock</span></a>
+   </li>
+  <!-- Nav Item - Charts -->
+  <!-- <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link" href="#" [routerLink]="['./orders/']" [queryParams]="{ pageSize: 50, currentPage: 1}">
+     <i class="fa fa-bar-chart"></i>
+     <span>Orders</span></a>
+  </li> -->
+  <hr class="sidebar-divider">
+  <li class="nav-item" routerLinkActive="active">
+   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder" aria-expanded="true" aria-controls="collapseOrder">
+   <i class="fa fa-fw fa-wrench"></i>
+   <span>Orders</span>
+   </a>
+   <div id="collapseOrder" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div class="py-2 collapse-inner">
+         <h6 class="collapse-header">Order Components</h6>
+         <a class="collapse-item" href="#" [routerLink]="['./orders/sales-order/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-list" aria-hidden="true"></i> &nbsp; Products / Medicines</a>
+         <a class="collapse-item" href="#" [routerLink]="['./orders/lab-test/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-medkit" aria-hidden="true"></i> &nbsp; Lab Tests</a>
+      </div>
+   </div>
+</li>
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+  <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link" href="#" [routerLink]="['./ssp-admin/']" [queryParams]="{ pageSize: 50, currentPage: 1}">
+     <i class="fa fa-fw fa-table"></i>
+     <span>SSP</span></a>
+  </li>
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block">
+</ul>
+<!-- End of Sidebar for Admin -->
+
+
+<!-- Sidebar for SSP Panel -->
+<ul class="navbar-nav bg-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" *ngIf="userCurrentRole === userRoles.ssp">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+     <div class="sidebar-brand-icon">
+        <img src="../../../../../assets/img/SS_Logo_Small.svg" class="w-25" alt="SmartSewa Logo">
+     </div>
+     <div class="sidebar-brand-text mx-3">
+        <img src="../../../../../assets/img/SS_Logo_White.svg" class="w-100 h-100" alt="SmartSewa Logo">
+     </div>
+  </a>
+  <div class="text-center d-none d-md-inline">
+     <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+  <hr class="sidebar-divider my-0">
+  <!-- <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link" href="#" [routerLink]="['./dashboard/']">
+     <i class="fa fa-desktop"></i>
+     <span>Stock</span></a>
+  </li> -->
+  <li class="nav-item" routerLinkActive="active">
+     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSSPInventory" aria-expanded="true" aria-controls="collapseSSPInventory">
+     <i class="fa fa-fw fa-wrench"></i>
+     <span>Inventory</span>
+     </a>
+     <div id="collapseSSPInventory" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="py-2 collapse-inner">
+           <h6 class="collapse-header">Inventory Components:</h6>
+           <a class="collapse-item" href="#" [routerLink]="['./ssp-panel/ssp-inventory/products/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-list" aria-hidden="true"></i> &nbsp; Products</a>
+           <a class="collapse-item" href="#" [routerLink]="['./ssp-panel/ssp-inventory/medicine/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-medkit" aria-hidden="true"></i> &nbsp; Medicine</a>
+        </div>
+     </div>
+  </li>
+  <hr class="sidebar-divider">
+  <li class="nav-item" routerLinkActive="active">
+   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSSPOrder" aria-expanded="true" aria-controls="collapseSSPOrder">
+   <i class="fa fa-fw fa-wrench"></i>
+   <span>Orders</span>
+   </a>
+   <div id="collapseSSPOrder" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div class="py-2 collapse-inner">
+         <h6 class="collapse-header">Order Components</h6>
+         <a class="collapse-item" href="#" [routerLink]="['./ssp-panel/ssp-sales-order/sales-order/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-list" aria-hidden="true"></i> &nbsp; Products / Medicines</a>
+         <a class="collapse-item" href="#" [routerLink]="['./ssp-panel/ssp-sales-order/lab-test/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-medkit" aria-hidden="true"></i> &nbsp; Lab Tests</a>
+      </div>
+   </div>
+</li>
+  <hr class="sidebar-divider">
+</ul>
+<!-- End of Sidebar for SSP Panel -->

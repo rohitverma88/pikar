@@ -1,0 +1,484 @@
+<!-- Add Vendor -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4" *ngIf="!!sspDataFormType && sspDataFormType !== ''">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">{{sspDataFormType}} SSP</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/ssp-admin/']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(sspdetailsForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="sspdetailsForm" #vendorForm="ngForm" (ngSubmit)="onSubmit(vendorForm)" *ngIf="sspdetailsForm">
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="firstName">First Name<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="50" class="form-control bg-light" id="firstName" placeholder="John" formControlName="firstName" [ngClass]="{ 'is-invalid': submitted && sspcheckout.firstName.errors }">
+                     <div *ngIf="submitted && sspcheckout.firstName.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.firstName.errors.required">Firstname is required</div>
+                        <div *ngIf="sspcheckout.firstName.errors.pattern">Firstname is invalid</div>
+                        <div *ngIf="sspcheckout.firstName.errors.minlength">Firstname should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="lastName">Last Name<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="50" class="form-control bg-light" id="lastName" placeholder="Jacob" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && sspcheckout.lastName.errors }">
+                     <div *ngIf="submitted && sspcheckout.lastName.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.lastName.errors.required">Lastname is required</div>
+                        <div *ngIf="sspcheckout.lastName.errors.pattern">Lastname is invalid</div>
+                        <div *ngIf="sspcheckout.lastName.errors.minlength">Lastname should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="sspmob">Vendor Mobile<span>*</span></label>
+                     <div class="input-group">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text bg-light" id="mobilecodeprepend">+91</span>
+                        </div>
+                        <input type="text" minlength="10" maxlength="10" class="form-control bg-light" id="sspmob" placeholder="Mob." aria-describedby="mobilecodeprepend" formControlName="mobile" [ngClass]="{ 'is-invalid': submitted && sspcheckout.mobile.errors }">
+                        <div *ngIf="submitted && sspcheckout.mobile.errors" class="invalid-feedback">
+                           <div *ngIf="sspcheckout.mobile.errors.required">Mobile No. is required</div>
+                           <div *ngIf="sspcheckout.mobile.errors.pattern">Mobile No. is Invalid</div>
+                           <div *ngIf="sspcheckout.mobile.errors.minlength">Mobile No. should be minimum 10 digits</div>
+                           <div *ngIf="sspcheckout.mobile.errors.maxlength">Mobile No. should be maximum 10 digits</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="secondarymobile">Secondary Mob.</label>
+                     <div class="input-group">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text bg-light" id="secondarymobilecodeprepend">+91</span>
+                        </div>
+                        <input type="text" minlength="10" maxlength="10" class="form-control bg-light" id="secondarymobile" placeholder="Mob." aria-describedby="secondarymobilecodeprepend" formControlName="secondaryMobile" [ngClass]="{ 'is-invalid': submitted && sspcheckout.secondaryMobile.errors }">
+                        <div *ngIf="submitted && sspcheckout.secondaryMobile.errors" class="invalid-feedback">
+                           <div *ngIf="sspcheckout.secondaryMobile.errors.pattern">Mobile No. is Invalid</div>
+                           <div *ngIf="sspcheckout.secondaryMobile.errors.minlength">Mobile No. should be minimum 10 digits</div>
+                           <div *ngIf="sspcheckout.secondaryMobile.errors.maxlength">Mobile No. should be maximum 10 digits</div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="vendoremail">SSP Email<span>*</span></label>
+                     <input type="email" class="form-control bg-light" id="vendoremail" placeholder="Email" formControlName="email" [ngClass]="{ 'is-invalid': submitted && sspcheckout.email.errors }">
+                     <div *ngIf="submitted && sspcheckout.email.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.email.errors.required">Email is required</div>
+                        <div *ngIf="sspcheckout.email.errors.email">Email is invalid</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="alternateEmail">Person Email</label>
+                     <input type="email" class="form-control bg-light" id="alternateEmail" placeholder="Email" formControlName="alternateEmail" [ngClass]="{ 'is-invalid': submitted && sspcheckout.alternateEmail.errors }">
+                     <div *ngIf="submitted && sspcheckout.alternateEmail.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.alternateEmail.errors.email">Email is invalid</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="dob">Date of Birth<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="dob" placeholder="DD-MM-YYYY" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }" [maxDate]="today" formControlName="dob" [ngClass]="{ 'is-invalid': submitted && sspcheckout.dob.errors }">
+                     <div *ngIf="submitted && sspcheckout.dob.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.dob.errors.required">Date of Birth is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="companyName">Company Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="companyName" placeholder="Name" formControlName="companyName" [ngClass]="{ 'is-invalid': submitted && sspcheckout.companyName.errors }">
+                     <div *ngIf="submitted && sspcheckout.companyName.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.companyName.errors.required">Company Name is required</div>
+                        <div *ngIf="sspcheckout.companyName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="sspcheckout.companyName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!machineIdDropdownData && machineIdDropdownData.length > 0">
+                     <label for="htmMachineId">Select HTM Machine ID<span>*</span></label>
+                     <ng-select
+                     [options]="machineIdDropdownData"
+                     [multiple]="false"
+                     placeholder="{{temphtmMachineId}}"
+                     clearAllText="Clear"
+                     formControlName="htmMachineId"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="htmMachineId"
+                     id="htmMachineId"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && sspcheckout.htmMachineId.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && sspcheckout.htmMachineId.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.htmMachineId.errors.required">HTMMachineId is required</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="address1">Address Line 1<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="120" class="form-control bg-light" id="address1" placeholder="Street Address 1" formControlName="street_address_1" [ngClass]="{ 'is-invalid': submitted && sspcheckout.street_address_1.errors }">
+                     <div *ngIf="submitted && sspcheckout.street_address_1.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.street_address_1.errors.required">Address Line 1 is required</div>
+                        <div *ngIf="sspcheckout.street_address_1.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="address2">Address 2<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="120" class="form-control bg-light" id="address2" placeholder="Street Address 2" formControlName="street_address_2" [ngClass]="{ 'is-invalid': submitted && sspcheckout.street_address_2.errors }">
+                     <div *ngIf="submitted && sspcheckout.street_address_2.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.street_address_2.errors.required">Address Line 2 is required</div>
+                        <div *ngIf="sspcheckout.street_address_2.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="city">City<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="city" placeholder="City" formControlName="city" [ngClass]="{ 'is-invalid': submitted && sspcheckout.city.errors }">
+                     <div *ngIf="submitted && sspcheckout.city.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.city.errors.required">City is required</div>
+                        <div *ngIf="sspcheckout.city.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="sspcheckout.city.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="state">State/ UT<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="state" placeholder="State" formControlName="state" [ngClass]="{ 'is-invalid': submitted && sspcheckout.state.errors }">
+                     <div *ngIf="submitted && sspcheckout.state.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.state.errors.required">State is required</div>
+                        <div *ngIf="sspcheckout.state.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="sspcheckout.state.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="country">Country<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="country" placeholder="India" formControlName="country" [ngClass]="{ 'is-invalid': submitted && sspcheckout.country.errors }">
+                     <div *ngIf="submitted && sspcheckout.country.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.country.errors.required">Country is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="pincode">Pincode<span>*</span></label>
+                     <input type="text" minlength="6" maxlength="6" class="form-control bg-light" id="pincode" placeholder="Pincode" formControlName="pincode" [ngClass]="{ 'is-invalid': submitted && sspcheckout.pincode.errors }">
+                     <div *ngIf="submitted && sspcheckout.pincode.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.pincode.errors.required">Pincode is required</div>
+                        <div *ngIf="sspcheckout.pincode.errors.pattern">Pincode is invalid</div>
+                        <div *ngIf="sspcheckout.pincode.errors.minlength">Pincode should be minimum 6 digits</div>
+                        <div *ngIf="sspcheckout.pincode.errors.maxlength">Pincode should be maximum 6 digits</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="landlineContactNumber">Landline Number<small>&nbsp; (Including STD Code)</small></label>
+                     <input type="text" class="form-control bg-light" id="landlineContactNumber" placeholder="011-22616161" formControlName="landlineContactNumber" [ngClass]="{ 'is-invalid': submitted && sspcheckout.landlineContactNumber.errors }">
+                     <div *ngIf="submitted && sspcheckout.landlineContactNumber.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.landlineContactNumber.errors.pattern">Only Numbers allowed without space, STD code separated by -(hyphen)</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="accountholder">Account Holder’s Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="accountholder" placeholder="Account Holder’s Name" formControlName="accountHolderName" [ngClass]="{ 'is-invalid': submitted && sspcheckout.accountHolderName.errors }">
+                     <div *ngIf="submitted && sspcheckout.accountHolderName.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.accountHolderName.errors.required">Account Holder Name is required</div>
+                        <div *ngIf="sspcheckout.accountHolderName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="sspcheckout.accountHolderName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="accountnumber">Account Number<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="accountnumber" placeholder="123-456-8910-1122" formControlName="accountNumber" [ngClass]="{ 'is-invalid': submitted && sspcheckout.accountNumber.errors }">
+                     <div *ngIf="submitted && sspcheckout.accountNumber.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.accountNumber.errors.required">Account No. is required</div>
+                        <div *ngIf="sspcheckout.accountNumber.errors.pattern">Should contain only numbers</div>
+                        <div *ngIf="sspcheckout.accountNumber.errors.minlength">Should be minimum 2 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="bankname">Bank Name<span>*</span></label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="bankname" placeholder="Bank Name" formControlName="bankName" [ngClass]="{ 'is-invalid': submitted && sspcheckout.bankName.errors }">
+                     <div *ngIf="submitted && sspcheckout.bankName.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.bankName.errors.required">Bank Name is required</div>
+                        <div *ngIf="sspcheckout.bankName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="sspcheckout.bankName.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="bankbranch">Bank Branch<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="bankbranch" placeholder="Bank Branch" formControlName="branchName" [ngClass]="{ 'is-invalid': submitted && sspcheckout.branchName.errors }">
+                     <div *ngIf="submitted && sspcheckout.branchName.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.branchName.errors.required">Bank Branch Name is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="ifsccode">IFSC Code<span>*</span></label>
+                     <input type="text" minlength="5" maxlength="15" class="form-control bg-light" id="ifsccode" oninput="this.value = this.value.toUpperCase()" placeholder="IFSC Code" formControlName="ifsc" [ngClass]="{ 'is-invalid': submitted && sspcheckout.ifsc.errors }">
+                     <div *ngIf="submitted && sspcheckout.ifsc.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.ifsc.errors.required">IFSC is required</div>
+                        <div *ngIf="sspcheckout.ifsc.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="sspcheckout.ifsc.errors.minlength">Should be minimum 5 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4 m-auto">
+                     <div class="d-block"><label class="control-label">Select A/C Type<span>*</span></label></div>
+                     <div class="d-flex">
+                        <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="accountType" id="current" [value]='true' formControlName="accountType"/>
+                           <label class="custom-control-label" for="current">Current</label>
+                         </div>
+                         <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="accountType" id="saving" [value]='false' formControlName="accountType"/>
+                           <label class="custom-control-label" for="saving">Saving</label>
+                         </div>
+                     </div>
+                     <div class="d-block">
+                        <div class="py-1" *ngIf="submitted && sspcheckout.accountType.errors">
+                           <p class="text-danger error-message m-0" *ngIf="sspcheckout.accountType.errors.required">Please select type</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-6">
+                     <label for="cancelCheque">Cancel Cheque No.</label>
+                     <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="cancelCheque" placeholder="29832" formControlName="cancelledCheque" [ngClass]="{ 'is-invalid': submitted && sspcheckout.cancelledCheque.errors }">
+                     <div *ngIf="submitted && sspcheckout.cancelledCheque.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.cancelledCheque.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                     <label for="gstinno">GSTIN No</label>
+                     <input type="text" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="gstinno" placeholder="GSTIN No" formControlName="gstNumber" [ngClass]="{ 'is-invalid': submitted && sspcheckout.gstNumber.errors }">
+                     <div *ngIf="submitted && sspcheckout.gstNumber.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.gstNumber.errors.pattern">No Space / Special Characters allowed</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-6 my-auto">
+                     <label>Upload Cancelled Cheque Image:</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputcheque.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputcheque multiple type="file" (change)="fileProgressCheque($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="cancelledChequeFile">
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlcheque;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="Cancelled Cheque" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="Cancelled Cheque" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedCheque(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!sspDetails && !!sspDetails.financialDetails.cancelledChequeUrl && sspDetails.financialDetails.cancelledChequeUrl.length != 0) && sspDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of sspDetails?.financialDetails.cancelledChequeUrl;">
+                           <img [src]="item" alt="Cancelled Cheque" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="Cancelled Cheque" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-6 m-auto">
+                     <label>Upload GSTIN Document</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputGST.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputGST multiple type="file" (change)="fileProgressgst($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="gstDocument">
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlgst;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedGSTFile(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!sspDetails && !!sspDetails.gstDocumentUrl && sspDetails.gstDocumentUrl.length != 0) && sspDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of sspDetails?.gstDocumentUrl;">
+                           <img [src]="item" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="GSTIN Document" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!typeDropdownData && typeDropdownData.length > 0">
+                     <label for="marginType">Margin Type<span>*</span></label>
+                     <ng-select
+                     [options]="typeDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Margin Type"
+                     clearAllText="Clear"
+                     formControlName="marginType"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="marginType"
+                     id="marginType"
+                     class="form-control bg-light custom"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="margin">Margin Value</label>
+                     <input type="text" class="form-control bg-light" id="margin" placeholder="10" formControlName="marginValue" [ngClass]="{ 'is-invalid': submitted && sspcheckout.marginValue.errors }">
+                     <div *ngIf="submitted && sspcheckout.marginValue.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.marginValue.errors.pattern">Should be only numeric/decimal</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4 m-auto">
+                     <button type="button" class="btn btn-primary btn-icon-split btn-sm" (click)="AddToMarginList(sspdetailsForm.value.marginType, sspdetailsForm.value.marginValue)" data-toggle="tooltip" data-placement="bottom" title="Add More">
+                        <span class="icon text-white-50"><i class="fa fa-plus"></i></span><span class="text">Add More</span>
+                     </button>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-12">
+                     <div class="table-responsive-sm">
+                        <table class="table table-bordered" *ngIf="!!marginArrData && marginArrData.length > 0">
+                           <tbody>
+                             <tr>
+                                <th>Margin Type</th>
+                                <th>Margin Value(%)</th>
+                                <th>Action</th>
+                             </tr>
+                              <tr *ngFor="let item of marginArrData">
+                                 <td>{{item.marginType}}</td>
+                                 <td>{{item.marginValue}}</td>
+                                 <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger btn-round btn-icon" (click)="deleteMargin(item)" data-toggle="tooltip" data-placement="bottom" title="delete "><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <p class="text-muted" *ngIf="sspDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-5">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!identityDropdownData && identityDropdownData.length > 0">
+                     <label for="identityType">Identity Type<span>*</span></label>
+                     <ng-select
+                     [options]="identityDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Identity Type"
+                     clearAllText="Clear"
+                     formControlName="identityType"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="identityType"
+                     id="identityType"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && sspcheckout.identityType.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && sspcheckout.identityType.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.identityType.errors.required">Select Identity Type is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="identityno">Identity No.<span>*</span></label>
+                     <input type="text" minlength="5" maxlength="20" class="form-control bg-light" id="identityno" oninput="this.value = this.value.toUpperCase()" placeholder="Identity No." formControlName="identityNumber" [ngClass]="{ 'is-invalid': submitted && sspcheckout.identityNumber.errors }">
+                     <div *ngIf="submitted && sspcheckout.identityNumber.errors" class="invalid-feedback">
+                        <div *ngIf="sspcheckout.identityNumber.errors.required">Identity Proof Number is required.</div>
+                        <div *ngIf="sspcheckout.identityNumber.errors.pattern">Only Number/Alphabet allowed.</div>
+                        <div *ngIf="sspcheckout.identityNumber.errors.minlength">Should be minimum of length 5.</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4 m-auto">
+                     <label>Upload Identity Document</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInputIdentity.click()" data-toggle="tooltip" data-placement="bottom" title="Upload File">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInputIdentity multiple type="file" (change)="fileProgressidentity($event)" data-max-size="32154" accept="image/jpeg, image/png, application/pdf" formControlName="identity">
+                     <div class="d-flex flex-wrap">
+                        <div class="m-1" *ngFor="let url of previewUrlidentity;let index = index">
+                           <div class="text-center">
+                              <img [src]="url" alt="Identity Doc" class="view-thumbnail-img" *ngIf="(url.includes('data:image/jpeg')) || (url.includes('data:image/png')) || (url.includes('data:image/jpg'))">
+                              <img src="../../../../../assets/img/PDF.svg" alt="Identity Doc" class="view-thumbnail-img" *ngIf="(url.includes('data:application/pdf'))">
+                           </div>
+                           <div class="text-center">
+                              <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedPancardIdentity(index)"><i class="fa fa-trash"></i></button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex flex-wrap" *ngIf="(!!sspDetails && !!sspDetails.identity && sspDetails.identity.length != 0) && sspDataFormType !== 'add'">
+                        <div class="m-1" *ngFor="let item of sspDetails?.identity?.identityUrl;">
+                           <img [src]="item" alt="Identity Doc" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))">
+                           <img src="../../../../../assets/img/PDF.svg" alt="Identity Doc" class="view-thumbnail-img" *ngIf="(item.includes('pdf'))">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row" *ngIf="(!!sspDetails && !!sspDetails.identity && sspDetails.identity.length != 0) && sspDataFormType !== 'add'">
+                  <div class="form-group col-md-12">
+                     <div class="table-responsive-sm">
+                        <table class="table table-bordered">
+                           <tbody>
+                             <tr>
+                                <th>Identity Type</th>
+                                <th>Identity Number</th>
+                                <th>Identity Images</th>
+                             </tr>
+                              <tr *ngFor="let item of sspDetails.identity">
+                                 <td>{{item.identityType}}</td>
+                                 <td>{{item.identityNumber}}</td>
+                                 <td class="text-center">
+                                    <div class="d-flex flex-wrap">
+                                       <div class="m-1" *ngFor="let imageitem of item.identityUrl;">
+                                          <img [src]="imageitem" alt="Identity Doc" class="view-thumbnail-img" *ngIf="(imageitem.includes('jpeg')) || (imageitem.includes('png')) || (imageitem.includes('jpg'))">
+                                          <img src="../../../../../assets/img/PDF.svg" alt="Identity Doc" class="view-thumbnail-img" *ngIf="(imageitem.includes('pdf'))">
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <p class="text-muted" *ngIf="sspDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+               </div>
+            </div>
+         </div>
+         <div class="form-row py-5">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Stock Listing</h1>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/stock/add-stock']"><i class="fa fa-plus" aria-hidden="true"></i> Add New Stock Items</button>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/stock/add-provider']"><i class="fa fa-plus" aria-hidden="true"></i> Add New Provider</button>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/stock/update-stock-item']"><i class="fa fa-plus" aria-hidden="true"></i> Update Stock Items Units</button>
+   </div>
+   <div class="row">
+      <div class="card shadow w-100">
+         <div class="card-body">
+            <ng-select
+            [multiple]="false"
+            [items]="serverSideSKUItems"
+            [(ngModel)]="selectedSKU"
+            (ngModelChange)="getSelectedProduct(selectedSKU)"
+            placeholder="Search Stock Details eg: 123456"
+            bindLabel="productSku"
+            bindValue="productSku"
+            [typeahead]="productTypehead">
+            <ng-template ng-typetosearch-tmp>
+                <div class="ng-option disabled">
+                    Please type the SKU ID...
+                </div>
+            </ng-template>
+            <!-- <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+               <div class="ng-option disabled">
+                   Fetching data for "{{searchTerm}}"
+               </div>
+           </ng-template> -->
+            <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                <div class="ng-option disabled">
+                  Fetching data for "{{searchTerm}}"
+                </div>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+               <div style="margin: 5px 0;" class="card">
+                   <div class="card-body p-2">
+                       <h5 class="card-title" [ngOptionHighlight]="search">Product SKU: <strong>{{item.productSku}}</strong></h5>
+                       <h6 class="card-subtitle mb-2 text-muted">Category : {{item.productCategory}} || Last Sold By: {{!!item.lastSoldBy && item.lastSoldBy !== '' ? item.lastSoldBy : 'NA'}} || Last Unit Sell: {{item.lastUnitsSell}}</h6>
+                   </div>
+               </div>
+           </ng-template>
+           </ng-select>
+           <div class="table-responsive-sm mt-4" *ngIf="!!selectedProductSKU && selectedProductSKU !== ''">
+            <table class="table table-bordered">
+               <tbody>
+                  <tr>
+                     <td>
+                        <span><strong>Product SKU: </strong>{{!!selectedProductSKU.productSku && selectedProductSKU.productSku !== '' ? selectedProductSKU.productSku : 'NA'}}</span>
+                     </td>
+                     <td>
+                        <span><strong>Product Category: </strong>{{!!selectedProductSKU.productCategory && selectedProductSKU.productCategory !== '' ? selectedProductSKU.productCategory : 'NA'}}</span>
+                     </td>
+                     <td>
+                        <span><strong>Last Sold By: </strong>{{!!selectedProductSKU.lastSoldBy && selectedProductSKU.lastSoldBy !== '' ? selectedProductSKU.lastSoldBy : 'NA'}}</span>
+                     </td>
+                     <td>
+                        <span><strong>Last Units Sell: </strong>{{!!selectedProductSKU.lastUnitsSell && selectedProductSKU.lastUnitsSell !== '' ? selectedProductSKU.lastUnitsSell : 'NA'}}</span>
+                     </td>
+                  </tr>
+                  <tr *ngFor="let item of selectedProductSKU.stock">
+                      <td colspan="4">
+                        <table class="w-75 m-auto">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Provider ID:</strong> {{item.providerId}}</td>
+                                    <td><strong>Provider Type:</strong> {{item.providerType}}</td>
+                                    <td><strong>Available Units:</strong> {{item.available_units}}</td>
+                                    <td><strong>Total Units Sale:</strong> {{item.total_unit_sale}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         </div>
+      </div>
+   </div>
+</div>

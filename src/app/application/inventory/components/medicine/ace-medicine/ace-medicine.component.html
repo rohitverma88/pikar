@@ -1,0 +1,269 @@
+<!-- Add Vendor -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4" *ngIf="!!medicineDataFormType && medicineDataFormType !== ''">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">{{medicineDataFormType}} Medicine</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/inventory/medicine']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(medicinedetailsForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="medicinedetailsForm" #vendorForm="ngForm" (ngSubmit)="onSubmit(vendorForm)" *ngIf="medicinedetailsForm">
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!vendorListData && vendorListData.length > 0">
+                     <label for="vendorId">Vendor<span>*</span></label>
+                     <ng-select
+                     [options]="vendorListData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Vendor"
+                     clearAllText="Clear"
+                     formControlName="vendorId"
+                     name="vendorId"
+                     id="vendorId"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && medicinecheckout.vendorId.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && medicinecheckout.vendorId.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.vendorId.errors.required">Vendor is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="vendorSKU">Vendor SKU</label>
+                     <input type="text" minlength="2" maxlength="30" class="form-control bg-light" id="vendorSKU" placeholder="32327392" formControlName="vendorSku" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.vendorSku.errors }">
+                     <div *ngIf="submitted && medicinecheckout.vendorSku.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.vendorSku.errors.pattern">Should contain only numbers</div>
+                        <div *ngIf="medicinecheckout.vendorSku.errors.minlength">Should be minimum 2 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!typeDropdownData && typeDropdownData.length > 0">
+                     <label for="vendortype">Category<span>*</span></label>
+                     <ng-select
+                     [options]="typeDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     formControlName="category"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="category"
+                     id="category"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && medicinecheckout.category.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && medicinecheckout.category.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.category.errors.required">Category is required</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="itemname">Item Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="itemname" placeholder="Dolo 650" formControlName="itemName" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.itemName.errors }">
+                     <div *ngIf="submitted && medicinecheckout.itemName.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.itemName.errors.required">Name is required</div>
+                        <div *ngIf="medicinecheckout.itemName.errors.pattern">Only (.) allowed.</div>
+                        <div *ngIf="medicinecheckout.itemName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="companyName">Company Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="companyName" placeholder="Cipla" formControlName="companyName" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.companyName.errors }">
+                     <div *ngIf="submitted && medicinecheckout.companyName.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.companyName.errors.required">Company Name is required</div>
+                        <div *ngIf="medicinecheckout.companyName.errors.pattern">Only (.) allowed.</div>
+                        <div *ngIf="medicinecheckout.companyName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="saltName">Salt Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="saltName" placeholder="Name" formControlName="saltName" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.saltName.errors }">
+                     <div *ngIf="submitted && medicinecheckout.saltName.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.saltName.errors.required">Salt Name is required</div>
+                        <div *ngIf="medicinecheckout.saltName.errors.pattern">Should contain only alphabets</div>
+                        <div *ngIf="medicinecheckout.saltName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="packing">Packaging Type<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="packing" placeholder="Strips/Bottles" formControlName="packing" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.packing.errors }">
+                     <div *ngIf="submitted && medicinecheckout.packing.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.packing.errors.required">Type is required</div>
+                        <div *ngIf="medicinecheckout.packing.errors.pattern">Name should contain only alphabets</div>
+                        <div *ngIf="medicinecheckout.packing.errors.minlength">Name should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="d-block"><label class="control-label">Is product available? <span>*</span></label></div>
+                     <div class="d-flex">
+                        <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="isAvailable" id="availableYes" [value]='true' formControlName="isAvailable"/>
+                           <label class="custom-control-label" for="availableYes">Yes</label>
+                         </div>
+                         <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="isAvailable" id="availableNo" [value]='false' formControlName="isAvailable"/>
+                           <label class="custom-control-label" for="availableNo">No</label>
+                         </div>
+                     </div>
+                     <div class="d-block">
+                        <div class="py-1" *ngIf="submitted && medicinecheckout.isAvailable.errors">
+                           <p class="text-danger error-message m-0" *ngIf="medicinecheckout.isAvailable.errors.required">Please select one option</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="d-block"><label class="control-label">Is Prescription required? <span>*</span></label></div>
+                     <div class="d-flex">
+                        <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="prescriptionRequired" id="presrequired" [value]='true' formControlName="prescriptionRequired"/>
+                           <label class="custom-control-label" for="presrequired">Yes</label>
+                         </div>
+                         <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="prescriptionRequired" id="presnotrequired" [value]='false' formControlName="prescriptionRequired"/>
+                           <label class="custom-control-label" for="presnotrequired">No</label>
+                         </div>
+                     </div>
+                     <div class="d-block">
+                        <div class="py-1" *ngIf="submitted && medicinecheckout.prescriptionRequired.errors">
+                           <p class="text-danger error-message m-0" *ngIf="medicinecheckout.prescriptionRequired.errors.required">Please select one option</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="costtocompany">Cost to company (Rs.)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="10" class="form-control bg-light" id="costtocompany" placeholder="33.89" formControlName="costToCompany" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.costToCompany.errors }">
+                     <div *ngIf="submitted && medicinecheckout.costToCompany.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.costToCompany.errors.required">Cost is required</div>
+                        <div *ngIf="medicinecheckout.costToCompany.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="medicinecheckout.costToCompany.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="totalMargin">Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="totalMargin" placeholder="20" formControlName="totalMargin" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.totalMargin.errors }">
+                     <div *ngIf="submitted && medicinecheckout.totalMargin.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.totalMargin.errors.required">Margin is required</div>
+                        <div *ngIf="medicinecheckout.totalMargin.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="medicinecheckout.totalMargin.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="SS_Margin">SS Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="SS_Margin" placeholder="20" formControlName="SS_Margin" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.SS_Margin.errors }">
+                     <div *ngIf="submitted && medicinecheckout.SS_Margin.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.SS_Margin.errors.required">Margin is required</div>
+                        <div *ngIf="medicinecheckout.SS_Margin.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="medicinecheckout.SS_Margin.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="SSP_Margin">SSP Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="SSP_Margin" placeholder="20" formControlName="SSP_Margin" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.SSP_Margin.errors }">
+                     <div *ngIf="submitted && medicinecheckout.SSP_Margin.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.SSP_Margin.errors.required">Margin is required</div>
+                        <div *ngIf="medicinecheckout.SSP_Margin.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="medicinecheckout.SSP_Margin.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="mrp">MRP (Rs.)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="10" class="form-control bg-light" id="mrp" placeholder="18.89" formControlName="mrp" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.mrp.errors }">
+                     <div *ngIf="submitted && medicinecheckout.mrp.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.mrp.errors.required">MRP is required</div>
+                        <div *ngIf="medicinecheckout.mrp.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="medicinecheckout.mrp.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="gst">GST(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="gst" placeholder="23" formControlName="gst" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.gst.errors }">
+                     <div *ngIf="submitted && medicinecheckout.gst.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.gst.errors.required">GST is required</div>
+                        <div *ngIf="medicinecheckout.gst.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="medicinecheckout.gst.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="batchId">Batch ID</label>
+                     <input type="text" minlength="2" maxlength="30" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="batchId" placeholder="98329U878IU" formControlName="batchId" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.batchId.errors }">
+                     <div *ngIf="submitted && medicinecheckout.batchId.errors" class="invalid-feedback">
+                        <div *ngIf="medicinecheckout.batchId.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="medicinecheckout.batchId.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label>Add Medicine Images</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInput.click()">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInput multiple type="file" (change)="fileProgressmedicineimage($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="medicineImages">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadimage" (change)="fileProgressmedicineimage($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="medicineImages" [ngClass]="{ 'is-invalid': submitted && medicinecheckout.medicineImages.errors }">
+                        <label class="custom-file-label bg-light" for="uploadimage">Choose file...</label>
+                     </div> -->
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="d-flex flex-wrap">
+                     <div class="m-1" *ngFor="let url of previewUrlmedicine;let index = index">
+                        <div class="text-center">
+                           <img [src]="url" alt="Medicine Image" class="view-thumbnail-img">
+                        </div>
+                        <div class="text-center">
+                           <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedFile(index)"><i class="fa fa-trash"></i></button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="d-flex flex-wrap" *ngIf="(!!medicineDetails && !!medicineDetails.images && medicineDetails.images.length != 0) && medicineDataFormType !== 'add'">
+                     <div class="m-1" *ngFor="let item of medicineDetails?.images;">
+                        <img [src]="item" alt="Medicine Image" class="view-thumbnail-img">
+                        <div class="text-center">
+                           <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="deleteImage(item)"><i class="fa fa-trash"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <p class="text-muted" *ngIf="(!!medicineDetails && !!medicineDetails.images && medicineDetails.images.length != 0) && medicineDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()" [routerLink]="['/app/inventory/medicine']" [queryParams]="{ pageSize: 50, currentPage: 1}">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

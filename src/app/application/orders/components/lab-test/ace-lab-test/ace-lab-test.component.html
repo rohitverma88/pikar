@@ -1,0 +1,648 @@
+<!-- Add Order -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4" *ngIf="!!orderDataFormType && orderDataFormType !== ''">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">Create Lab Test</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/orders/lab-test']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(orderDetailsForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+    <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="orderDetailsForm" #vendorForm="ngForm" *ngIf="orderDetailsForm">
+            <div class="card shadow mb-4">
+               <div class="card-header">
+                  <h5 class="m-0">Lab Test Type</h5>
+               </div>
+               <div class="card-body">
+                  <div class="form-row">
+                     <div class="form-group col-md-4" *ngIf="!!salesOrderObject && !!orderTypeDropdownData && orderTypeDropdownData.length !== 0">
+                        <label for="labtesttype">Select Type<span>*</span></label>
+                        <ng-select
+                           [options]="orderTypeDropdownData"
+                           bindValue="value"
+                           bindLabel="value"
+                           [multiple]="false"
+                           [closeOnSelect]="false"
+                           [searchable]="false"
+                           placeholder="Select Order Type"
+                           clearAllText="Clear"
+                           name="order_type"
+                           id="order_type"
+                           class="form-control bg-light custom"
+                           [(ngModel)]="salesOrderObject.order_type"
+                           [ngModelOptions]="{standalone: true}"
+                           (ngModelChange)="orderTypeChanged()"
+                           >
+                           </ng-select>
+                     </div>
+                     <div class="form-group col-md-4" *ngIf="!!machineIdDropdownData && machineIdDropdownData.length > 0 && salesOrderObject.order_type === 'store_pickup'">
+                        <label for="htm_machine_id">HTM Machine Id</label>
+                        <ng-select
+                        [options]="machineIdDropdownData"
+                        bindValue="value"
+                        bindLabel="label"
+                        [multiple]="false"
+                        [closeOnSelect]="false"
+                        [searchable]="true"
+                        placeholder="Select HTM Machine ID"
+                        clearAllText="Clear"
+                        name="htm_machine_id"
+                        id="htm_machine_id"
+                        class="form-control bg-light custom"
+                        [(ngModel)]="salesOrderObject.htm_machine_id"
+                        [ngModelOptions]="{standalone: true}"
+                        >
+                        </ng-select>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         <div class="card shadow mb-4">
+            <div class="card-header">
+               <h5 class="m-0">Customer</h5>
+            </div>
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <div class="col d-flex p-0 tab_searchform">
+                        <form [formGroup]="customerSearchForm" class="w-100">
+                           <label for="customer">Select Customer<span>*</span></label>
+                           <div class="input-group mb-3">
+                              <input type="text" class="form-control" #box (keyup)="onKey(box.value)" placeholder="Search Customer" formControlName="search" aria-label="Search" aria-describedby="basic-addon2" value="{{!!selectedCustomerData && !!selectedCustomerData.firstName && selectedCustomerData.firstName !== '' && !!selectedCustomerData.lastName && selectedCustomerData.lastName !== '' ? selectedCustomerData.firstName + ' ' + selectedCustomerData.lastName : ''}}">
+                           </div>
+                        </form>
+                        <div class="tab_dropdown_content p-0" *ngIf="showCustomerSearchDropdown">
+                           <ng-container *ngIf="!!customerSearchResult && customerSearchResult[0] === 'Loading'">
+                              <button class="btn btn-outline-secondary btn-sm w-100" type="button" disabled>
+                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                 Loading...
+                              </button>
+                           </ng-container>
+                           <ng-container *ngIf="!!customerSearchResult && customerSearchResult === 'No Results Found'">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">No Results Found</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!customerSearchResult && customerSearchResult[0] === 'Network Error'">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">Network Error</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!customerSearchResult && customerSearchResult !== ''">
+                              <div class="list-group" *ngFor="let searcheddata of customerSearchResult" (click)="selectCustomer(searcheddata)">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-2">
+                                    <p class="m-0"><strong>{{!!searcheddata.firstName && searcheddata.firstName !== '' ? searcheddata.firstName : ''}} {{!!searcheddata.lastName && searcheddata.lastName !== '' ? searcheddata.lastName : ''}}</strong>
+                                       <span class="float-right">
+                                          <small>{{!!searcheddata.accountId && searcheddata.accountId !== '' ? searcheddata.accountId : 'NA'}}</small>
+                                       </span>
+                                    </p>
+                                    <p class="m-0"><small><strong>Email: </strong>{{searcheddata.email}} || <strong>Mob: </strong>{{searcheddata.mobile}}</small></p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!customerSearchResult && customerSearchResult.length === 1 && customerSearchResult[0].message === 'No Results Found'">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">Error Message</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!customerSearchResult && customerSearchResult.length === 0">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">No Data Found</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!vendorListData && vendorListData.length > 0">
+                     <label for="services">Vendor<span>*</span></label>
+                     <ng-select
+                     [options]="vendorListData"
+                     bindValue="value"
+                     bindLabel="label"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Vendor"
+                     clearAllText="Clear"
+                     name="vendorId"
+                     id="vendorId"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="salesOrderObject.accountId"
+                     [ngModelOptions]="{standalone: true}"
+                     (ngModelChange)="vendorChanged(salesOrderObject.accountId)"
+                     >
+                     </ng-select>
+                  </div>
+               </div>
+               <div *ngIf="!!selectedCustomerData">
+                  <p><strong>Customer Information</strong></p>
+                  <div class="table-responsive p-2">
+                     <table class="table table-bordered">
+                        <thead>
+                           <tr>
+                           <th scope="col">Account ID</th>
+                           <th scope="col">First Name</th>
+                           <th scope="col">Middle Name</th>
+                           <th scope="col">Last Name</th>
+                           <th scope="col">Email</th>
+                           <th scope="col">Mobile</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>{{selectedCustomerData.accountId}}</td>
+                              <td>{{selectedCustomerData.firstName}}</td>
+                              <td>{{selectedCustomerData.middleName}}</td>
+                              <td>{{selectedCustomerData.lastName}}</td>
+                              <td>{{selectedCustomerData.email}}</td>
+                              <td>{{selectedCustomerData.mobile}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div *ngIf="!!selectedCustomerData && !!salesOrderObject && salesOrderObject.order_type === 'home_delivery'">
+                  <p>
+                     <span><strong>Available Address</strong></span>
+                     <button type="button" class="btn btn-sm btn-primary shadow-sm float-right" data-toggle="modal" data-target="#addAddressModal" (click)="triggerAddressForm()">
+                        Add New Address
+                     </button>
+                  </p>                 
+                  <div class="table-responsive p-2" *ngIf="!!customerAllAddresses && customerAllAddresses.length > 0; else noAvailableAddressBlock">
+                     <table class="table table-bordered">
+                        <thead>
+                           <tr>
+                           <th scope="col">Select One</th>
+                           <th scope="col">Address Label</th>
+                           <th scope="col">Address</th>
+                           <th scope="col">City</th>
+                           <th scope="col">State</th>
+                           <th scope="col">Country</th>
+                           <th scope="col">Pincode</th>
+                           <th scope="col">Landmark</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let item of customerAllAddresses">
+                              <td>
+                                 <form>
+                                    <div class="d-flex">
+                                       <div class="mx-auto">
+                                          <input id="{{'addressRadio' + item.addressId}}" type="radio" value="{{item.addressId}}" name="addressRadio" [(ngModel)]="addressRadio" [ngModelOptions]="{standalone: true}" (click)="selectAddress(item)">
+                                          <!-- <label for="addressRadio" class="mx-1">Address ID: {{item.addressId}}</label> -->
+                                       </div>
+                                    </div>
+                                 </form>
+                              </td>
+                              <td>{{item.addressLabel}}</td>
+                              <td>{{item.address}}</td>
+                              <td>{{item.city}}</td>
+                              <td>{{item.state}}</td>
+                              <td>{{item.country}}</td>
+                              <td>{{item.pincode}}</td>
+                              <td>{{item.landmark}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+                  <ng-template #noAvailableAddressBlock>No Address Available</ng-template>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-header">
+               <h5 class="m-0">Select Test</h5>
+            </div>
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <div class="d-block">
+                        <label class="control-label">Booking For</label>
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="bookingFor" id="bookingForSelf" [value]='0' [(ngModel)]="flagbookingfor" [ngModelOptions]="{standalone: true}"/>
+                           <label class="custom-control-label" for="bookingForSelf">Self</label>
+                         </div>
+                         <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="bookingFor" id="bookingForOthers" [value]='1' [(ngModel)]="flagbookingfor" [ngModelOptions]="{standalone: true}"/>
+                           <label class="custom-control-label" for="bookingForOthers">Others</label>
+                         </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row" *ngIf="!!flagbookingfor && flagbookingfor === 1">
+                  <div class="form-group col-md-3">
+                     <label for="name">Patient Name<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="name" placeholder="Enter Name" [(ngModel)]="model.name" #name="ngModel" [ngModelOptions]="{standalone: true}">
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="relation">Relationship with Patient<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="relation" placeholder="Enter Relation" [(ngModel)]="model.relation" #relation="ngModel" [ngModelOptions]="{standalone: true}">
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="gender">Gender<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="gender" placeholder="Male/Female/Others" [(ngModel)]="model.gender" #gender="ngModel" [ngModelOptions]="{standalone: true}">
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="age">Age<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="age" placeholder="eg: 27" [(ngModel)]="model.age" #age="ngModel" [ngModelOptions]="{standalone: true}">
+                  </div>
+               </div>
+               <div class="form-row" *ngIf="!!flagbookingfor && flagbookingfor === 1">
+                  <div class="form-group col-md-3">
+                     <label for="email">Email</label>
+                     <input type="email" class="form-control bg-light" id="email" placeholder="Email" [(ngModel)]="model.email" #email="ngModel" [ngModelOptions]="{standalone: true}">
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="phone">Mobile<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="phone" placeholder="99XXXXXXXX" [(ngModel)]="model.phone" #phone="ngModel" [ngModelOptions]="{standalone: true}">
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <div class="d-flex p-0 tab_searchform">
+                        <form [formGroup]="productSearchForm" class="w-100">
+                           <label for="productLabel">Search Lab Test<span>*</span></label>
+                           <div class="input-group mb-3">
+                              <input type="text" class="form-control" #productBox (keyup)="onProductKey(productBox.value)" placeholder="Search Lab Test Here...." formControlName="search" aria-label="Product" aria-describedby="basic-addon3">
+                           </div>
+                        </form>
+                        <div class="tab_dropdown_content p-0" *ngIf="showProductSearchDropdown">
+                           <ng-container *ngIf="!!productSearchResult && productSearchResult[0] === 'Loading'">
+                              <button class="btn btn-outline-secondary btn-sm w-100" type="button" disabled>
+                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                 Loading...
+                              </button>
+                           </ng-container>
+                           <ng-container *ngIf="!!productSearchResult && productSearchResult === 'No Results Found'">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">No Results Found</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!productSearchResult && productSearchResult[0] === 'Network Error'">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">Network Error</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!productSearchResult && productSearchResult[0] !== 'Loading' && productSearchResult">
+                              <div class="list-group" *ngFor="let searcheddata of productSearchResult" (click)="addProductToCart(searcheddata)">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-2">
+                                    <p class="m-0"><strong>{{searcheddata.productName}}</strong> ({{searcheddata.productId}}) <strong class="float-right">Rs: {{searcheddata.mrp}}</strong></p>
+                                    <p class="m-0">{{searcheddata.category}}</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!productSearchResult && productSearchResult.length === 1 && productSearchResult[0].message === 'No Results Found'">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">Error Message</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                           <ng-container *ngIf="!!productSearchResult && productSearchResult.length === 0">
+                              <div class="list-group py-1">
+                                 <div class="list-group-item list-group-item-action list-group-item-light px-2 py-1">
+                                    <p class="m-0">No Data Found</p>
+                                 </div>
+                              </div>
+                           </ng-container>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- <div class="form-group col-md-4" *ngIf="!!quantityDropdownData && quantityDropdownData.length !== 0">
+                     <label for="Quantity">Qantity</label>
+                     <ng-select
+                        [options]="quantityDropdownData"
+                        bindValue="value"
+                        bindLabel="value"
+                        [multiple]="false"
+                        [closeOnSelect]="false"
+                        [searchable]="false"
+                        placeholder="Select Quantity"
+                        clearAllText="Clear"
+                        name="quantity"
+                        id="quantity"
+                        class="form-control bg-light custom"
+                        [(ngModel)]="quantity"
+                        [ngModelOptions]="{standalone: true}"
+                        >
+                        </ng-select>
+                  </div> -->
+                  <!-- <div class="form-group col-md-4 m-auto">
+                     <button type="button" class="btn btn-sm btn-primary shadow-sm" (click)="addProductToCart()">
+                        + Add Test
+                     </button>
+                  </div> -->
+                  <div class="form-row w-100">
+                     <div class="table-responsive p-2" *ngIf="!!completeCartData && !!completeCartData.cartItems && completeCartData.cartItems.length > 0">
+                        <label class="py-2">Diagnostic Cart</label>
+                        <table class="table table-bordered">
+                           <thead>
+                              <tr>
+                                <th scope="col">Category</th>
+                                <th scope="col">Product ID</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Amount Per Unit</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Discount</th>
+                                <th scope="col">Prescription Required?</th>
+                                <th scope="col" class="text-center">Tax Details
+                                 <table class="table table-sm table-borderless mb-0">
+                                    <thead>
+                                       <th scope="col">CGST</th>
+                                       <th scope="col">SGST</th>
+                                       <th scope="col">IGST</th>
+                                    </thead>
+                                 </table>
+                                </th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let item of completeCartData.cartItems">
+                                 <th scope="row">{{item.category}}</th>
+                                <th scope="row">{{item.productId}}</th>
+                                <td>{{item.productName}}</td>
+                                <td>{{item.amount}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.discount}}</td>
+                                <td>{{item.itemReqPrescription === true ? 'Yes' : 'No'}}</td>
+                                <td class="text-center">
+                                 <table class="table table-sm table-borderless mb-0">
+                                    <thead>
+                                       <th scope="col">{{item.taxDetails.cgst + '%'}}</th>
+                                       <th scope="col">{{item.taxDetails.sgst + '%'}}</th>
+                                       <th scope="col">{{item.taxDetails.igst + '%'}}</th>
+                                    </thead>
+                                 </table>
+                                </td>
+                                <td>{{item.displayAmount}}</td>
+                                <td>
+                                 <button class="btn btn-sm btn-outline-secondary" (click)="removeProductFromCart(item)">Remove</button>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                  </div>
+                  <div class="form-row w-100" *ngIf="!!completeCartData && !!completeCartData.cartItems && completeCartData.cartItems.length > 0">
+                     <div class="row col-9">
+                        <div class="form-group col-md-4">
+                           <label for="margin">Discount Promocode</label>
+                           <input type="text" class="form-control bg-light" id="promo_code" placeholder="Enter Promo Code" [ngModelOptions]="{standalone: true}" [(ngModel)]="salesOrderObject.promo_code" name="promo_code">
+                        </div>
+                        <div class="form-group col-md-8 m-auto text-left pt-2">
+                           <button type="button" class="btn btn-sm btn-primary shadow-sm" (click)="addPromoCode(salesOrderObject.promo_code)">
+                              Apply
+                           </button>
+                        </div>
+                        
+                     </div>
+                     <div class="col-md-3 m-auto text-right">
+                        <p class="m-0" *ngIf="!!completeCartData && !!completeCartData.finalBillDetails && !!completeCartData.finalBillDetails.sampleCollectionCharges">Delivery Charges: &nbsp; <strong>Rs. {{completeCartData?.finalBillDetails?.deliveryCharges}}</strong></p>
+                        <p class="m-0" *ngIf="!!completeCartData && !!completeCartData.finalBillDetails && !!completeCartData.finalBillDetails.totalSaving">Total Saving: &nbsp; <strong>Rs. {{completeCartData?.finalBillDetails?.totalSaving}}</strong></p>
+                        <p class="m-0" *ngIf="!!completeCartData && !!completeCartData.finalBillDetails && !!completeCartData.finalBillDetails.payableAmount">Payable Amount: &nbsp; <strong>Rs. {{completeCartData?.finalBillDetails?.payableAmount}}</strong></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-header">
+               <h5 class="m-0">Select Date and Time</h5>
+            </div>
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label class="control-label" for="booking_date">Booking Date</label>
+                     <input type="text" autocomplete="off" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }" [minDate]="minDate" [maxDate]="maxDate" [bsValue]="bsValue" placeholder="{{bsValue | date:'yyyy-MM-dd'}}" id="booking_date" name="booking_date" [(ngModel)]="bookingSchedule.date" [ngModelOptions]="{standalone: true}"/>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label class="control-label" for="time">Pickup Time</label>
+                     <input class="form-control" autocomplete="off" type="time" id="time" name="time" placeholder="Time" [(ngModel)]="bookingSchedule.time" [ngModelOptions]="{standalone: true}"/>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-header">
+               <h5 class="m-0">Additional Instructions</h5>
+            </div>
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-6">
+                     <label for="instructionsForCollectionAgent">Instruction for Agent</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50"  placeholder="Enter Instruction for Agent" id="instructionsForCollectionAgent" name="instructionsForCollectionAgent" [(ngModel)]="salesOrderObject.instructionsForCollectionAgent" [ngModelOptions]="{standalone: true}"></textarea>
+                  </div>
+                  <div class="form-group col-md-6">
+                     <label for="remark">Remarks</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50"  placeholder="Remarks (If Any)?" id="remark" name="remark" [(ngModel)]="salesOrderObject.remark" [ngModelOptions]="{standalone: true}"></textarea>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-header">
+               <h5 class="m-0">Payment</h5>
+            </div>
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!modeOfPaymentDropDownData && modeOfPaymentDropDownData.length > 0">
+                     <label for="mode_of_payment">Mode of Payment</label>
+                     <ng-select
+                     [options]="modeOfPaymentDropDownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Mode of Payment"
+                     clearAllText="Clear"
+                     name="mode_of_payment"
+                     id="mode_of_payment"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="salesOrderObject.mode_of_payment"
+                     [ngModelOptions]="{standalone: true}"
+                     (ngModelChange)="modeOfPaymentChanged(salesOrderObject.mode_of_payment)"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!methodOfTransactionDropDownData && methodOfTransactionDropDownData.length > 0">
+                     <label for="method_of_transaction">Method of Transaction</label>
+                     <ng-select
+                     [options]="methodOfTransactionDropDownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Method of Transaction"
+                     clearAllText="Clear"
+                     name="method_of_transaction"
+                     id="method_of_transaction"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="salesOrderObject.method_of_transaction"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                     </ng-select>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!statusOfPaymentDropDownData && statusOfPaymentDropDownData.length > 0 && salesOrderObject.mode_of_payment === 'OFFLINE'">
+                     <label for="htm_machine_id">Status of Payment</label>
+                     <ng-select
+                     [options]="statusOfPaymentDropDownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Mode of Payment"
+                     clearAllText="Clear"
+                     name="status_of_payment"
+                     id="status_of_payment"
+                     class="form-control bg-light custom"
+                     [(ngModel)]="salesOrderObject.status_of_payment"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                     </ng-select>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="button" [disabled]="disableBtn" (click)="createSalesOrder()">Create</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="addAddressModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="my-5 text-center" *ngIf="!addAddressForm">
+            <button class="btn btn-outline-secondary" type="button" disabled>
+               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+               Loading...
+            </button>
+         </div>
+         <form class="user needs-validation" novalidate [formGroup]="addAddressForm" #addressForm="ngForm" (ngSubmit)="addressSubmit(addressForm)" *ngIf="addAddressForm">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="form-row">
+               <div class="form-group col-md-4" *ngIf="!!addressLabelDropdownData && addressLabelDropdownData.length !== 0">
+                  <label for="address1">Address Label<span>*</span></label>
+                  <ng-select
+                     [options]="addressLabelDropdownData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Address Label"
+                     clearAllText="Clear"
+                     formControlName="addressLabel"
+                     name="addressLabel"
+                     id="addressLabel"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.addressLabel.errors }"
+                     >
+                     </ng-select>
+                  <div *ngIf="addresssubmitted && addresscheckout.addressLabel.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.addressLabel.errors.required">Address Label is required</div>
+                  </div>
+               </div>
+               <div class="form-group col-md-8">
+                  <label for="address1">Address<span>*</span></label>
+                  <input type="text" minlength="3" maxlength="120" class="form-control bg-light" id="address1" placeholder="Enter Full Address" formControlName="street_address_1" [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.street_address_1.errors }">
+                  <div *ngIf="addresssubmitted && addresscheckout.street_address_1.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.street_address_1.errors.required">Address is required</div>
+                     <div *ngIf="addresscheckout.street_address_1.errors.minlength">Should be minimum 3 characters</div>
+                  </div>
+               </div>
+            </div>
+            <div class="form-row">
+               <div class="form-group col-md-4">
+                  <label for="city">City<span>*</span></label>
+                  <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="city" placeholder="City" formControlName="city" [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.city.errors }">
+                  <div *ngIf="addresssubmitted && addresscheckout.city.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.city.errors.required">City is required</div>
+                     <div *ngIf="addresscheckout.city.errors.pattern">Should contain only alphabets</div>
+                     <div *ngIf="addresscheckout.city.errors.minlength">Should be minimum 2 characters</div>
+                  </div>
+               </div>
+               <div class="form-group col-md-4">
+                  <label for="state">State/ UT<span>*</span></label>
+                  <input type="text" minlength="2" maxlength="20" class="form-control bg-light" id="state" placeholder="State" formControlName="state" [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.state.errors }">
+                  <div *ngIf="addresssubmitted && addresscheckout.state.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.state.errors.required">State is required</div>
+                     <div *ngIf="addresscheckout.state.errors.pattern">Should contain only alphabets</div>
+                     <div *ngIf="addresscheckout.state.errors.minlength">Should be minimum 2 characters</div>
+                  </div>
+               </div>
+               <div class="form-group col-md-4">
+                  <label for="state">Country<span>*</span></label>
+                  <input type="text" class="form-control bg-light" id="country" placeholder="Country" formControlName="country" [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.country.errors }">
+                  <div *ngIf="addresssubmitted && addresscheckout.country.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.country.errors.required">Country is required</div>
+                  </div>
+               </div>
+            </div>
+            <div class="form-row">
+               <div class="form-group col-md-4">
+                  <label for="pincode">Pincode<span>*</span></label>
+                  <input type="text" minlength="6" maxlength="6" class="form-control bg-light" id="pincode" placeholder="Pincode" formControlName="pincode" [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.pincode.errors }">
+                  <div *ngIf="addresssubmitted && addresscheckout.pincode.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.pincode.errors.required">Pincode is required</div>
+                     <div *ngIf="addresscheckout.pincode.errors.pattern">Pincode is invalid</div>
+                     <div *ngIf="addresscheckout.pincode.errors.minlength">Pincode should be minimum 6 digits</div>
+                     <div *ngIf="addresscheckout.pincode.errors.maxlength">Pincode should be maximum 6 digits</div>
+                  </div>
+               </div>
+               <div class="form-group col-md-8">
+                  <label for="pincode">Landmark<span>*</span></label>
+                  <input type="text" class="form-control bg-light" id="landmark" placeholder="Landmark" formControlName="landmark" [ngClass]="{ 'is-invalid': addresssubmitted && addresscheckout.landmark.errors }">
+                  <div *ngIf="addresssubmitted && addresscheckout.landmark.errors" class="invalid-feedback">
+                     <div *ngIf="addresscheckout.landmark.errors.required">Landmark is required</div>
+                     <div *ngIf="addresscheckout.landmark.errors.minlength">Landmark should be minimum 3 character</div>
+                     <div *ngIf="addresscheckout.landmark.errors.maxlength">Landmark should be maximum 120 character</div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-secondary w-25" type="submit">Update</button>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

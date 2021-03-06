@@ -1,0 +1,297 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">SSP Details</h1>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1 ml-auto" (click)="exportSSP()"><i class="fa fa-download" aria-hidden="true"></i> Export SSP Admin</button>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="backtoListing()"><i class="fa fa-angle-left"></i>&nbsp; Back</button>
+   </div>
+   <!-- Page Body -->
+   <div class="d-flex justify-content-center" *ngIf="!(!!sspDetails && sspDetails !== null)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-4" *ngIf="!!sspDetails && sspDetails !== null">
+      <div class="col-xl-12 col-lg-12">
+         <div class="card shadow p-4">
+            <ul class="nav nav-tabs" id="sspDetailsTab" role="tablist">
+               <li class="nav-item">
+                 <a class="nav-link active" id="ssp-tab" data-toggle="tab" href="#sspinfo" role="tab" aria-controls="sspinfo" aria-selected="true">SSP Info</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" id="finance-tab" data-toggle="tab" href="#financeinfo" role="tab" aria-controls="financeinfo" aria-selected="false">Financial Details</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" id="identity-tab" data-toggle="tab" href="#identityinfo" role="tab" aria-controls="identityinfo" aria-selected="false">Identity</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" id="margin-tab" data-toggle="tab" href="#margininfo" role="tab" aria-controls="margininfo" aria-selected="false">Margin</a>
+                </li>
+             </ul>
+             <div class="tab-content" id="sspDetailsTabContent">
+               <div class="tab-pane fade show active" id="sspinfo" role="tabpanel" aria-labelledby="ssp-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>SSP ID: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.SSP_ID && sspDetails.SSP_ID !== '' ? sspDetails.SSP_ID : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Account Status : </strong></span>
+                                 <span class="float-right">{{!!sspDetails.accountStatus && sspDetails.accountStatus !== '' ? sspDetails.accountStatus : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Company Name</strong></span>
+                                 <span class="float-right">{{!!sspDetails.companyName && sspDetails.companyName !== null ? sspDetails.companyName : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Alternate Email: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.alternateEmail && sspDetails.alternateEmail !== '' ? sspDetails.alternateEmail : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Date of Birth: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.dob && sspDetails.dob !== '' ? sspDetails.dob : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Primary Email: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.email && sspDetails.email !== '' ? sspDetails.email : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>First Name: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.firstName && sspDetails.firstName !== '' ? sspDetails.firstName : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Last Name: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.lastName && sspDetails.lastName !== '' ? sspDetails.lastName : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>GST No.: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.gstNumber && sspDetails.gstNumber !== '' ? sspDetails.gstNumber : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>HTM Machine ID: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.htmMachineId && sspDetails.htmMachineId !== '' ? sspDetails.htmMachineId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Reg. Date: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.registrationDate && sspDetails.registrationDate !== '' ? sspDetails.registrationDate : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Created At: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.createdAt && sspDetails.createdAt !== '' ? sspDetails.createdAt : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Primary Mob.: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.mobile && sspDetails.mobile !== '' ? sspDetails.mobile : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Secondary Mob.: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.secondaryMobile && sspDetails.secondaryMobile !== '' ? sspDetails.secondaryMobile : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Landline No.: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.landlineContactNumber && sspDetails.landlineContactNumber !== '' ? sspDetails.landlineContactNumber : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Address: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.address.street_address_1 && sspDetails.address.street_address_1 !== '' ? sspDetails.address.street_address_1 : 'NA'}} {{!!sspDetails.address.street_address_2 && sspDetails.address.street_address_2 !== '' ? sspDetails.address.street_address_2 : 'NA'}}</span><br/>
+                              </td>
+                              <td>
+                                 <span><strong>City / State / Country.: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.address.city && sspDetails.address.city !== '' ? sspDetails.address.city : 'NA'}} / {{!!sspDetails.address.state && sspDetails.address.state !== '' ? sspDetails.address.state : 'NA'}} / {{!!sspDetails.address.country && sspDetails.address.country !== '' ? sspDetails.address.country : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Pincode: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.address.pincode && sspDetails.address.pincode !== '' ? sspDetails.address.pincode : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Updated At: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.updatedAt && sspDetails.updatedAt !== '' ? sspDetails.updatedAt : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered image-table">
+                                       <tbody>
+                                          <tr>
+                                             <td>
+                                                <p><strong>GST Documents: </strong></p>
+                                                <div class="d-flex" *ngIf="sspDetails?.gstDocumentUrl.length != 0">
+                                                   <div class="m-1" *ngFor="let imageItem of sspDetails?.gstDocumentUrl;">
+                                                      <img src="{{imageItem}}" alt="GST Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('jpeg')) || (imageItem.includes('png')) || (imageItem.includes('jpg'))" data-toggle="tooltip" data-placement="bottom" title="View GST Doc" data-toggle="modal" data-target="#openImageModal" (click)="openSpecificImage(imageItem)">
+                                                      <img src="../../../../../assets/img/PDF.svg" alt="Prescription Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('.pdf'))" data-toggle="tooltip" data-placement="bottom" title="View GST Doc" (click)="viewPDF(imageItem)">
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="sspDetails?.gstDocumentUrl.length === 0">
+                                                   <img src="../../../../../assets/img/dummy.png" alt="Dummy Image" class="view-thumbnail-img" data-toggle="tooltip" data-placement="bottom" title="No Image Available" (click)="toasterAlert()">
+                                                </div>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="financeinfo" role="tabpanel" aria-labelledby="finance-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>A/C Holder: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.accountHolderName && sspDetails.financialDetails.accountHolderName !== '' ? sspDetails.financialDetails.accountHolderName : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>A/C No.: </strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.accountNumber && sspDetails.financialDetails.accountNumber !== '' ? sspDetails.financialDetails.accountNumber : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>A/C Type:</strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.accountType && sspDetails.financialDetails.accountType !== null ? sspDetails.financialDetails.accountType : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Bank Name:</strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.bankName && sspDetails.financialDetails.bankName !== null ? sspDetails.financialDetails.bankName : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>IFSC Code:</strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.ifsc && sspDetails.financialDetails.ifsc !== null ? sspDetails.financialDetails.ifsc : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Branch Name:</strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.branchName && sspDetails.financialDetails.branchName !== null ? sspDetails.financialDetails.branchName : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Cancelled Cheques:</strong></span>
+                                 <span class="float-right">{{!!sspDetails.financialDetails.cancelledCheque && sspDetails.financialDetails.cancelledCheque !== null ? sspDetails.financialDetails.cancelledCheque : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr *ngIf="!!sspDetails?.financialDetails?.cancelledChequeUrl">
+                              <td colspan="3">
+                                 <p><strong>Uploaded Cheques: </strong></p>
+                                 <div class="d-flex" *ngIf="sspDetails?.financialDetails?.cancelledChequeUrl.length != 0">
+                                    <div class="m-1" *ngFor="let imageItem of sspDetails?.financialDetails?.cancelledChequeUrl;">
+                                       <img src="{{imageItem}}" alt="Cheque Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('jpeg')) || (imageItem.includes('png')) || (imageItem.includes('jpg'))" data-toggle="tooltip" data-placement="bottom" title="View Cheque" data-toggle="modal" data-target="#openImageModal" (click)="openSpecificImage(imageItem)">
+                                       <img src="../../../../../assets/img/PDF.svg" alt="Prescription Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('.pdf'))" data-toggle="tooltip" data-placement="bottom" title="View Cheque" (click)="viewPDF(imageItem)">
+                                    </div>
+                                 </div>
+                                 <div *ngIf="sspDetails?.financialDetails?.cancelledChequeUrl.length === 0">
+                                    <img src="../../../../../assets/img/dummy.png" alt="Dummy Image" class="view-thumbnail-img" data-toggle="tooltip" data-placement="bottom" title="No Image Available" (click)="toasterAlert()">
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="identityinfo" role="tabpanel" aria-labelledby="identity-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>Identity No.</th>
+                              <th>Identity Type</th>
+                              <th>Identity Doc</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let identityitem of sspDetails?.identity;">
+                              <td>{{identityitem.identityNumber}}</td>
+                              <td>{{identityitem.identityType}}</td>
+                              <td>
+                                 <div class="table-responsive-sm p-2">
+                                    <table class="table">
+                                       <tr>
+                                          <td>
+                                             <div class="d-flex" *ngIf="identityitem?.identityUrl.length != 0">
+                                                <div class="m-1" *ngFor="let imageItem of identityitem?.identityUrl;">
+                                                   <img src="{{imageItem}}" alt="GST Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('jpeg')) || (imageItem.includes('png')) || (imageItem.includes('jpg'))" data-toggle="tooltip" data-placement="bottom" title="View Doc" data-toggle="modal" data-target="#openImageModal" (click)="openSpecificImage(imageItem)">
+                                                   <img src="../../../../../assets/img/PDF.svg" alt="Prescription Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('.pdf'))" data-toggle="tooltip" data-placement="bottom" title="View Doc" (click)="viewPDF(imageItem)">
+                                                </div>
+                                             </div>
+                                             <div *ngIf="identityitem?.identityUrl.length === 0">
+                                                <img src="../../../../../assets/img/dummy.png" alt="Dummy Image" class="view-thumbnail-img" data-toggle="tooltip" data-placement="bottom" title="No Image Available" (click)="toasterAlert()">
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="margininfo" role="tabpanel" aria-labelledby="margin-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>Margin Type</th>
+                              <th>Margin Value</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let item of sspDetails?.margin;">
+                              <td>{{item.marginType}}</td>
+                              <td>{{item.marginValue}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+             </div>
+            <div class="text-left my-2 d-block">
+               <p class="text-muted"><small>*NA : Not Available</small></p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="openImageModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="viewImageModalLabel">Image</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body" *ngIf="!!specificImageData">
+            <p><small><strong>Note: &nbsp;</strong>Please click on the image to download.</small></p>
+            <a href="{{specificImageData}}" download>
+               <img src="{{specificImageData}}" class="img-fluid w-100 h-100" alt="Image Details">
+            </a>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>

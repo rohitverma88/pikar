@@ -1,0 +1,244 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Lab Test Details</h1>
+      <!-- <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1 ml-auto" (click)="exportOrder()"><i class="fa fa-download" aria-hidden="true"></i> Export Order</button> -->
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="backtoListing()"><i class="fa fa-angle-left"></i>&nbsp; Back</button>
+   </div>
+   <!-- Page Body -->
+   <div class="d-flex justify-content-center" *ngIf="!(!!orderDetails && orderDetails !== null)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-4" *ngIf="!!orderDetails && orderDetails !== null">
+      <div class="col-xl-12 col-lg-12">
+         <div class="card shadow p-4">
+            <ul class="nav nav-tabs" id="orderDetailsTab" role="tablist">
+               <li class="nav-item">
+                 <a class="nav-link active" id="order-tab" data-toggle="tab" href="#orderinfo" role="tab" aria-controls="orderinfo" aria-selected="true">Booking Info</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" id="user-tab" data-toggle="tab" href="#patientDetails" role="tab" aria-controls="patientDetails" aria-selected="false">Patient Info</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" id="timeline-tab" data-toggle="tab" href="#timelineinfo" role="tab" aria-controls="timelineinfo" aria-selected="false">Address Info</a>
+               </li>
+             </ul>
+             <div class="tab-content" id="orderDetailsTabContent">
+               <div class="tab-pane fade show active" id="orderinfo" role="tabpanel" aria-labelledby="order-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>Booking ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.bookingId && orderDetails.bookingId !== '' ? orderDetails.bookingId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Booking Status : </strong></span>
+                                 <span class="float-right">{{!!orderDetails.bookingStatus && orderDetails.bookingStatus !== '' ? orderDetails.bookingStatus : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Booking Item Count</strong></span>
+                                 <span class="float-right">{{!!orderDetails.bookingItemCount && orderDetails.bookingItemCount !== null ? orderDetails.bookingItemCount : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Booking For: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.bookingFor && orderDetails.bookingFor !== '' ? orderDetails.bookingFor : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Order Date & Time: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.createdAt && orderDetails.createdAt !== '' ? orderDetails.createdAt : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Booking Amount: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.bookingAmount && orderDetails.bookingAmount !== '' ? orderDetails.bookingAmount : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Channel: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.channel && orderDetails.channel !== '' ? orderDetails.channel : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Transaction Ref ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.txnRefId && orderDetails.txnRefId !== '' ? orderDetails.txnRefId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Vendor ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.vendorId && orderDetails.vendorId !== '' ? orderDetails.vendorId : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Booking Type: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.bookingType && orderDetails.bookingType !== '' ? orderDetails.bookingType : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Instruction for Agent: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.instructionsForCollectionAgent && orderDetails.instructionsForCollectionAgent !== '' ? orderDetails.instructionsForCollectionAgent : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Remark: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.remark && orderDetails.remark !== '' ? orderDetails.remark : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Last Updated At: </strong></span>
+                                 <span class="float-right" *ngIf="!!orderDetails.updatedAt && orderDetails.updatedAt !== ''">{{orderDetails.updatedAt | date: 'medium'}}</span>
+                                 <span class="float-right" *ngIf="!!orderDetails.updatedAt && orderDetails.updatedAt === ''">NA</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <p class="text-center"><strong><u>List of Products</u></strong></p>
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered table-sm">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Product ID</th>
+                                             <th>Product Name</th>
+                                             <th>Product Category</th>
+                                             <th>Product Quantity</th>
+                                             <th>Product Amount</th>
+                                          </tr>
+                                        </thead>
+                                       <tbody>
+                                          <tr *ngFor="let products of orderDetails.bookingItems;">
+                                             <td>{{products.productId}}</td>
+                                             <td>{{products.productName}}</td>
+                                             <td>{{products.productCategory}}</td>
+                                             <td>{{products.productQuantity}}</td>
+                                             <td>{{products.productAmount}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <p class="text-center"><strong><u>Booking Schedule</u></strong></p>
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered table-sm">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Date</th>
+                                             <th>Time</th>
+                                          </tr>
+                                        </thead>
+                                       <tbody>
+                                          <tr>
+                                             <td>
+                                                <span *ngIf="!!orderDetails.bookingSchedule.date && orderDetails.bookingSchedule.date !== ''">{{orderDetails.bookingSchedule.date | date: 'dd/MM/yyyy'}}</span>
+                                                <span *ngIf="!!orderDetails.bookingSchedule.date && orderDetails.bookingSchedule.date === ''">NA</span>
+                                             </td>
+                                             <td>{{!!orderDetails.bookingSchedule.time && orderDetails.bookingSchedule.time ? orderDetails.bookingSchedule.time : 'NA'}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <p class="text-center"><strong><u>Discount Details</u></strong></p>
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered table-sm">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Discount Type</th>
+                                             <th>Applied</th>
+                                             <th>Provider</th>
+                                             <th>Voucher Id</th>
+                                          </tr>
+                                        </thead>
+                                       <tbody>
+                                          <tr *ngFor="let item of orderDetails.discountApplied">
+                                             <td>{{item.discountType}}</td>
+                                             <td>{{item.isApplied === true ? 'Yes' : 'No'}}</td>
+                                             <td>{{item.provider}}</td>
+                                             <td>{{item.voucherId}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="patientDetails" role="tabpanel" aria-labelledby="user-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>Patient Name</th>
+                              <th>Age</th>
+                              <th>Gender</th>
+                              <th>Email</th>
+                              <th>Mobile</th>
+                              <th>Relation</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>
+                                 {{!!orderDetails.patientDetails.name && orderDetails.patientDetails.name !== '' ? orderDetails.patientDetails.name : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.patientDetails.age && orderDetails.patientDetails.age !== null ? orderDetails.patientDetails.age : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.patientDetails.gender && orderDetails.patientDetails.gender !== '' ? orderDetails.patientDetails.gender : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.patientDetails.email && orderDetails.patientDetails.email !== '' ? orderDetails.patientDetails.email : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.patientDetails.phone && orderDetails.patientDetails.phone !== null ? orderDetails.patientDetails.phone : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.patientDetails.relation && orderDetails.patientDetails.relation !== null ? orderDetails.patientDetails.relation : 'NA'}}
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="timelineinfo" role="tabpanel" aria-labelledby="timeline-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>HTM Store ID</th>
+                              <th>Store Selected</th>
+                              <th>Address ID</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>{{!!orderDetails.pickUpAddress.htmStoreId && orderDetails.pickUpAddress.htmStoreId !== '' ? orderDetails.pickUpAddress.htmStoreId : 'NA'}}</td>
+                              <td>{{!!orderDetails.pickUpAddress.isStoreSelected && orderDetails.pickUpAddress.isStoreSelected === true ? 'Yes' : 'No'}}</td>
+                              <td>{{!!orderDetails.pickUpAddress.userAddressId && orderDetails.pickUpAddress.userAddressId !== '' ? orderDetails.pickUpAddress.userAddressId : 'NA'}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+             </div>
+            <div class="text-left my-2 d-block">
+               <p class="text-muted"><small>*NA : Not Available</small></p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

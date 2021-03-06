@@ -1,0 +1,596 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Order Details</h1>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mx-1 ml-auto" (click)="exportOrder()"><i class="fa fa-download" aria-hidden="true"></i> Export Order</button>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="backtoListing()"><i class="fa fa-angle-left"></i>&nbsp; Back</button>
+   </div>
+   <!-- Page Body -->
+   <div class="d-flex justify-content-center" *ngIf="!(!!orderDetails && orderDetails !== null)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-4" *ngIf="!!orderDetails && orderDetails !== null">
+      <div class="col-xl-12 col-lg-12">
+         <div class="card shadow p-4">
+            <ul class="nav nav-tabs" id="orderDetailsTab" role="tablist">
+               <li class="nav-item">
+                 <a class="nav-link active" id="order-tab" data-toggle="tab" href="#orderinfo" role="tab" aria-controls="orderinfo" aria-selected="true">Order Info</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" id="user-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="false">User Info</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" id="timeline-tab" data-toggle="tab" href="#timelineinfo" role="tab" aria-controls="timelineinfo" aria-selected="false">Time Line</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" id="tracking-tab" data-toggle="tab" href="#trackinginfo" role="tab" aria-controls="trackinginfo" aria-selected="false">Tracking</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="mapping-tab" data-toggle="tab" href="#mappinginfo" role="tab" aria-controls="mappinginfo" aria-selected="false">Mapping</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="invoice-tab" data-toggle="tab" href="#invoiceinfo" role="tab" aria-controls="invoiceinfo" aria-selected="false">Invoice</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="payment-tab" data-toggle="tab" href="#paymentinfo" role="tab" aria-controls="paymentinfo" aria-selected="false">Payment</a>
+                </li>
+             </ul>
+             <div class="tab-content" id="orderDetailsTabContent">
+               <div class="tab-pane fade show active" id="orderinfo" role="tabpanel" aria-labelledby="order-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>Order ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.orderId && orderDetails.Order.orderId !== '' ? orderDetails.Order.orderId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Order Status : </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.orderStatus && orderDetails.Order.orderStatus !== '' ? orderDetails.Order.orderStatus : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Order Item Count</strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.orderedItemCount && orderDetails.Order.orderedItemCount !== null ? orderDetails.Order.orderedItemCount : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Order Description: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.orderDescription && orderDetails.Order.orderDescription !== '' ? orderDetails.Order.orderDescription : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Order Date & Time: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.orderDateAndTime && orderDetails.Order.orderDateAndTime !== '' ? orderDetails.Order.orderDateAndTime : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Order Amount: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.orderAmount && orderDetails.Order.orderAmount !== '' ? orderDetails.Order.orderAmount : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Channel: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.channel && orderDetails.Order.channel !== '' ? orderDetails.Order.channel : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Payment ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.paymentId && orderDetails.Order.paymentId !== '' ? orderDetails.Order.paymentId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>SSP ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.sspId && orderDetails.Order.sspId !== '' ? orderDetails.Order.sspId : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Transaction Ref ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.txnRefId && orderDetails.Order.txnRefId !== '' ? orderDetails.Order.txnRefId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Last Updated At: </strong></span>
+                                 <span class="float-right" *ngIf="!!orderDetails.Order.updatedAt && orderDetails.Order.updatedAt !== ''">{{orderDetails.Order.updatedAt | date: 'medium'}}</span>
+                                 <span class="float-right" *ngIf="!!orderDetails.Order.updatedAt && orderDetails.Order.updatedAt === ''">NA</span>
+                              </td>
+                              <td>
+                                 <span><strong>Delivery Instruction: </strong></span>
+                                 <span class="float-right" *ngIf="!!orderDetails.Order.userDeliveryInstruction && orderDetails.Order.userDeliveryInstruction !== ''">{{orderDetails.Order.userDeliveryInstruction}}</span>
+                                 <span class="float-right" *ngIf="!(!!orderDetails.Order.userDeliveryInstruction) || orderDetails.Order.userDeliveryInstruction === ''">NA</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>PAN Card No.: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.panCard && orderDetails.Order.panCard !== '' ? orderDetails.Order.panCard : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>GSTIN No.: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.Order.gstNumber && orderDetails.Order.gstNumber !== '' ? orderDetails.Order.gstNumber : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Order Category: </strong></span>
+                                 <span class="float-right" *ngFor="let item of orderDetails?.Order?.orderCategory;">&nbsp; {{item}} |</span>
+                              </td>
+                           </tr>
+                           <tr *ngIf="!!orderDetails?.adressDetails">
+                              <td colspan="3">
+                                 <p class="text-center"><strong><u>User Address</u></strong></p>
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered table-sm">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Address</th>
+                                             <th>Address Type</th>
+                                             <th>City/State/Country</th>
+                                             <th>Landmark</th>
+                                             <th>Pincode</th>
+                                             <th>Address Active</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr>
+                                             <td>{{orderDetails?.adressDetails.address}}</td>
+                                             <td>{{orderDetails?.adressDetails.addressLabel}}</td>
+                                             <td>{{orderDetails?.adressDetails.city}}, {{orderDetails?.adressDetails.state}}, {{orderDetails?.adressDetails.country}}</td>
+                                             <td>{{orderDetails?.adressDetails.landmark}}</td>
+                                             <td>{{orderDetails?.adressDetails.pincode}}</td>
+                                             <td>
+                                                <span *ngIf="orderDetails?.adressDetails.isActive === true">Yes</span>
+                                                <span *ngIf="orderDetails?.adressDetails.isActive === false">No</span>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <p class="text-center"><strong><u>Discount Details</u></strong></p>
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered table-sm">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Discount Type</th>
+                                             <th>Applied</th>
+                                             <th>Provider</th>
+                                             <th>Voucher Id</th>
+                                          </tr>
+                                        </thead>
+                                       <tbody>
+                                          <tr *ngFor="let item of orderDetails.Order.discountApplied">
+                                             <td>{{item.discountType}}</td>
+                                             <td>{{item.isApplied === true ? 'Yes' : 'No'}}</td>
+                                             <td>{{item.provider}}</td>
+                                             <td>{{item.voucherId}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <p class="text-center"><strong><u>List of Products</u></strong></p>
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered table-sm">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Product ID</th>
+                                             <th>Product Name</th>
+                                             <th>Product Category</th>
+                                             <th>Product Quantity</th>
+                                             <th>Product Amount</th>
+                                          </tr>
+                                        </thead>
+                                       <tbody>
+                                          <tr *ngFor="let products of orderDetails?.Order.orderedItems;">
+                                             <td>{{products.productId}}</td>
+                                             <td>{{products.productName}}</td>
+                                             <td>{{products.productCategory}}</td>
+                                             <td>{{products.productQuantity}}</td>
+                                             <td>{{products.productAmount}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered image-table">
+                                       <tbody>
+                                          <tr>
+                                             <td>
+                                                <p><strong>Prescriptions: </strong></p>
+                                                <div class="d-flex" *ngIf="orderDetails?.Order.prescription.attachments.length != 0">
+                                                   <div class="m-1" *ngFor="let imageItem of orderDetails?.Order?.prescription?.attachments;">
+                                                      <img src="{{imageItem}}" alt="Prescription Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('jpeg')) || (imageItem.includes('png')) || (imageItem.includes('jpg'))" data-toggle="tooltip" data-placement="bottom" title="View Prescription" data-toggle="modal" data-target="#openImageModal" (click)="openSpecificImage(imageItem)">
+                                                      <img src="../../../../../assets/img/PDF.svg" alt="Prescription Image" class="view-thumbnail-img" *ngIf="(imageItem.includes('.pdf'))" data-toggle="tooltip" data-placement="bottom" title="View Prescription" (click)="viewPDF(imageItem)">
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="orderDetails?.Order.prescription.attachments.length === 0">
+                                                   <img src="../../../../../assets/img/dummy.png" alt="Dummy Image" class="view-thumbnail-img" data-toggle="tooltip" data-placement="bottom" title="No Image Available" (click)="toasterAlert()">
+                                                </div>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="userinfo" role="tabpanel" aria-labelledby="user-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>User Address</th>
+                              <th>Email</th>
+                              <th>Mobile</th>
+                              <th>Name</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>
+                                 {{!!orderDetails.userInfo.address && orderDetails.userInfo.address !== '' ? orderDetails.userInfo.address : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.userInfo.email && orderDetails.userInfo.email !== '' ? orderDetails.userInfo.email : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.userInfo.mobile && orderDetails.userInfo.mobile !== null ? orderDetails.userInfo.mobile : 'NA'}}
+                              </td>
+                              <td>
+                                 {{!!orderDetails.userInfo.name && orderDetails.userInfo.name !== '' ? orderDetails.userInfo.name : 'NA'}}
+                            </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="timelineinfo" role="tabpanel" aria-labelledby="timeline-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>Status</th>
+                              <th>Action</th>
+                              <th>Action By</th>
+                              <th>Date</th>
+                              <th>Current State</th>
+                              <th>Previous State</th>
+                              <th>Remark (If Any)</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let state of orderDetails?.timeline;">
+                              <td><span *ngIf="state.active === true">Active</span><span *ngIf="state.active === false">Inactive</span></td>
+                              <td>{{state.action}}</td>
+                              <td>{{state.actionBy.channel}} || {{state.actionBy.id}} || <span class="text-capitalize">{{state.actionBy.role}}</span></td>
+                              <td>{{state.dateTime}}</td>
+                              <td>{{state.newState}}</td>
+                              <td>{{state.previousState}}</td>
+                              <td>{{state.remark}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="trackinginfo" role="tabpanel" aria-labelledby="tracking-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <thead class="thead-light">
+                           <tr>
+                              <th>Order ID</th>
+                              <th>TimeLine ID</th>
+                              <th>Vendor Mapping ID</th>
+                              <th>Status</th>
+                              <th>Created At</th>
+                              <th>Last Status</th>
+                              <th>Updated At</th>
+                              <th>Last Updated By</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let trackitem of orderDetails?.order_Tracks;">
+                              <td>{{trackitem.orderId}}</td>
+                              <td><button type="button" class="btn btn-outline-secondary btn-sm" (click)="trackItem(trackitem.timelineId, trackitem.orderId)" data-toggle="modal" data-target="#trackStatusModal">{{trackitem.timelineId}}</button></td>
+                              <td>{{trackitem.vendorMappingId}}</td>
+                              <td>{{trackitem.activeStatus}}</td>
+                              <td>{{trackitem.createdAt}}</td>
+                              <td>{{trackitem.lastStatus}}</td>
+                              <td>{{trackitem.lastUpdatedDateTime}}</td>
+                              <td>{{trackitem.lastUpdatedBy}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="mappinginfo" role="tabpanel" aria-labelledby="mapping-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered" *ngFor="let mappingitem of orderDetails?.order_mapping;">
+                        <thead class="thead-dark">
+                           <tr>
+                              <th>Order ID</th>
+                              <th>Map ID</th>
+                              <th>Assigned By</th>
+                              <th>Assigned On</th>
+                              <th>Vendor ID</th>
+                              <th>Remark</th>
+                              <th>Vendor Accepted Order?</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>{{mappingitem.orderId}}</td>
+                              <td>{{mappingitem.mapId}}</td>
+                              <td>{{mappingitem.assignedBy}}</td>
+                              <td>{{mappingitem.assignDateTime}}</td>
+                              <td>{{mappingitem.vendorId}}</td>
+                              <td>{{mappingitem.vendorRemark}}</td>
+                              <td><span *ngIf="mappingitem.vendorAcceptOrder === true">YES</span><span *ngIf="mappingitem.vendorAcceptOrder === false">NO</span></td>
+                           </tr>
+                           <tr>
+                              <td colspan="7">
+                                 <div class="table-responsive-sm">
+                                    <table class="table table-bordered" *ngFor="let productitems of mappingitem.orderItems; let i = index;">
+                                       <thead class="thead-light">
+                                          <tr>
+                                             <th>Sr. No.</th>
+                                             <th>Product ID</th>
+                                             <th>Product Name</th>
+                                             <th>Product Quantity</th>
+                                             <th>Product Amount</th>
+                                             <th>Product Category</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr>
+                                             <td>{{i + 1}}</td>
+                                             <td>{{productitems.productId}}</td>
+                                             <td>{{productitems.productName}}</td>
+                                             <td>{{productitems.productQuantity}}</td>
+                                             <td>{{productitems.productAmount}}</td>
+                                             <td>{{productitems.productCategory}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="invoiceinfo" role="tabpanel" aria-labelledby="invoice-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>Invoice Status: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.invoiceInfo.availableStatus && orderDetails.invoiceInfo.availableStatus !== '' ? orderDetails.invoiceInfo.availableStatus : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Email Delivery Status: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.invoiceInfo.emailDeliveredStatus && orderDetails.invoiceInfo.emailDeliveredStatus !== '' ? orderDetails.invoiceInfo.emailDeliveredStatus : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Share Invoice</strong></span>
+                                 <span class="float-right">
+                                    <form name="form" (ngSubmit)="f.form.valid && sendInvoice(orderDetails)" #f="ngForm" novalidate>
+                                       <div class="form-group">
+                                          <div class="input-group">
+                                             <input type="email" class="form-control" name="email" [(ngModel)]="orderDetails.userInfo.email" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email>
+                                             <div class="input-group-append">
+                                               <button type="submit" class="btn btn-primary btn-sm" *ngIf="!!orderDetails.invoiceInfo.availableStatus && orderDetails.invoiceInfo.availableStatus === 'Available'">Send Invoice</button>
+                                               <button type="submit" class="btn btn-primary btn-sm" *ngIf="!!orderDetails.invoiceInfo.availableStatus && orderDetails.invoiceInfo.availableStatus !== 'Available'">Genrate Invoice</button>
+                                             </div>
+                                             <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+                                                <div *ngIf="email.errors.required">Email is required</div>
+                                                <div *ngIf="email.errors.email">Email must be a valid email address</div>
+                                            </div>
+                                          </div>
+                                       </div>
+                                    </form>
+                                 </span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td colspan="3">
+                                 <p><strong>Files: </strong></p>
+                                 <div class="d-flex" *ngIf="orderDetails?.invoiceInfo.downloadUrls.length != 0">
+                                    <div class="m-1" *ngFor="let imageItem of orderDetails?.invoiceInfo.downloadUrls;">
+                                       <img src="{{imageItem.url}}" alt="Invoice Image" class="view-thumbnail-img" *ngIf="(imageItem.url.includes('jpeg')) || (imageItem.url.includes('png')) || (imageItem.url.includes('jpg'))" data-toggle="tooltip" data-placement="bottom" title="View Invoice" data-toggle="modal" data-target="#openImageModal" (click)="openSpecificImage(imageItem.url)">
+                                       <img src="../../../../../assets/img/PDF.svg" alt="Invoice Image" class="view-thumbnail-img" *ngIf="(imageItem.url.includes('.pdf'))" data-toggle="tooltip" data-placement="bottom" title="View Invoice" (click)="viewPDF(imageItem.url)">
+                                    </div>
+                                 </div>
+                                 <div *ngIf="orderDetails?.invoiceInfo.downloadUrls.length === 0">
+                                    <img src="../../../../../assets/img/dummy.png" alt="Dummy Image" class="view-thumbnail-img" data-toggle="tooltip" data-placement="bottom" title="No Image Available" (click)="toasterAlert()">
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="paymentinfo" role="tabpanel" aria-labelledby="payment-tab">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>TAT: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.TAT && orderDetails.paymentInfo.TAT !== '' ? orderDetails.paymentInfo.TAT : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Amount: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.amount && orderDetails.paymentInfo.amount !== '' ? orderDetails.paymentInfo.amount : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Comment: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.comment && orderDetails.paymentInfo.comment !== '' ? orderDetails.paymentInfo.comment : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Description: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.description && orderDetails.paymentInfo.description !== '' ? orderDetails.paymentInfo.description : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Mode Of Transaction: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.methodOfTransaction && orderDetails.paymentInfo.methodOfTransaction !== '' ? orderDetails.paymentInfo.methodOfTransaction : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Mobile No.: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.mobile && orderDetails.paymentInfo.mobile !== '' ? orderDetails.paymentInfo.mobile : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Payment Mode: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.modeOfPayment && orderDetails.paymentInfo.modeOfPayment !== '' ? orderDetails.paymentInfo.modeOfPayment : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Payment Status: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.statusOfPayment && orderDetails.paymentInfo.statusOfPayment !== '' ? orderDetails.paymentInfo.statusOfPayment : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <span><strong>Transaction ID: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.transactionId && orderDetails.paymentInfo.transactionId !== '' ? orderDetails.paymentInfo.transactionId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Transaction Reference No.: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.transactionRefNumber && orderDetails.paymentInfo.transactionRefNumber !== '' ? orderDetails.paymentInfo.transactionRefNumber : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>User Role: </strong></span>
+                                 <span class="float-right">{{!!orderDetails.paymentInfo.userRole && orderDetails.paymentInfo.userRole !== '' ? orderDetails.paymentInfo.userRole : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Last Updated At: </strong></span>
+                                 <span class="float-right" *ngIf="!!orderDetails.paymentInfo.updatedAt && orderDetails.paymentInfo.updatedAt !== ''">{{orderDetails.paymentInfo.updatedAt | date: 'medium'}}</span>
+                                 <span class="float-right" *ngIf="!!orderDetails.paymentInfo.updatedAt && orderDetails.paymentInfo.updatedAt === ''">NA</span>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+             </div>
+            <div class="text-left my-2 d-block">
+               <p class="text-muted"><small>*NA : Not Available</small></p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="openImageModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="viewImageModalLabel">Image</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body" *ngIf="!!specificImageData">
+            <p><small><strong>Note: &nbsp;</strong>Please click on the image to download.</small></p>
+            <a href="{{specificImageData}}" download>
+               <img src="{{specificImageData}}" class="img-fluid w-100 h-100" alt="Image Details">
+            </a>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="trackStatusModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="trackStatusModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="trackStatusModalLabel">Tracking Status</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="my-5 text-center" *ngIf="!(!!trackingInformation)">
+               <button class="btn btn-outline-secondary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+               </button>
+            </div>
+            <div *ngIf="!!trackingInformation" class="row">
+               <div class="col-lg-12">
+                  <div class="table-responsive-sm p-2">
+                     <table class="table table-bordered">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <span><strong>Order ID: </strong></span>
+                                 <span class="float-right">{{!!trackingInformation.orderId && trackingInformation.orderId !== '' ? trackingInformation.orderId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Tracking ID: </strong></span>
+                                 <span class="float-right">{{!!trackingInformation.trackTimelineId && trackingInformation.trackTimelineId !== '' ? trackingInformation.trackTimelineId : 'NA'}}</span>
+                              </td>
+                              <td>
+                                 <span><strong>Created At: </strong></span>
+                                 <span class="float-right">{{!!trackingInformation.createdAt && trackingInformation.createdAt !== '' ? trackingInformation.createdAt : 'NA'}}</span>
+                              </td>
+                           </tr>
+                           <tr *ngIf="!!trackingInformation.timeline">
+                              <td colspan="3">
+                                 <div class="table-responsive-sm p-2 tracking-table-modal">
+                                    <table class="table table-bordered">
+                                       <tbody>
+                                          <tr>
+                                             <th>Status</th>
+                                             <th>Date & Time</th>
+                                             <th>Previous State</th>
+                                             <th>Current State</th>
+                                             <th>Action</th>
+                                             <th>Action By</th>
+                                             <th>Remark</th>
+                                          </tr>
+                                          <tr *ngFor="let trackingitem of trackingInformation?.timeline;">
+                                             <td>{{!!trackingitem.active && trackingitem.active === true ? 'Active' : 'Inactive'}}</td>
+                                             <td>{{!!trackingitem.dateTime && trackingitem.dateTime !== '' ? trackingitem.dateTime : 'NA'}}</td>
+                                             <td>{{!!trackingitem.previousState && trackingitem.previousState !== '' ? trackingitem.previousState : 'NA'}}</td>
+                                             <td>{{!!trackingitem.newState && trackingitem.newState !== '' ? trackingitem.newState : 'NA'}}</td>
+                                             <td>{{!!trackingitem.action && trackingitem.action !== '' ? trackingitem.action : 'NA'}}</td>
+                                             <td>{{!!trackingitem.actionBy && !!trackingitem.actionBy.channel && !!trackingitem.actionBy.id && !!trackingitem.actionBy.role ? 
+                                                'Channel: ' + trackingitem.actionBy.channel + ' || ID: ' +  trackingitem.actionBy.id + ' || Role: ' + trackingitem.actionBy.role : 'NA'}}</td>
+                                             <td>{{!!trackingitem.remark && trackingitem.remark !== '' ? trackingitem.remark : 'NA'}}</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+                  <p><small><strong>*NA:</strong>&nbsp; Not Available.</small></p>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,191 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Diagnostics Details</h1>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="backtoListing()"><i class="fa fa-angle-left"></i>&nbsp; Back</button>
+   </div>
+   <!-- Page Body -->
+   <div class="d-flex justify-content-center" *ngIf="!(!!diagnosticDetails && diagnosticDetails !== null)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-4" *ngIf="!!diagnosticDetails && diagnosticDetails !== null">
+      <div class="col-xl-12 col-lg-12">
+         <div class="card shadow p-4">
+            <div class="table-responsive-sm">
+               <table class="table table-bordered">
+                  <tbody>
+                     <tr>
+                        <td>
+                           <span><strong>Vendor ID: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.vendorId && diagnosticDetails.vendorId !== '' ? diagnosticDetails.vendorId : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Test Name: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.testName && diagnosticDetails.testName !== '' ? diagnosticDetails.testName : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Type: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.type && diagnosticDetails.type !== '' ? diagnosticDetails.type : 'NA'}}</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Test Included: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.testIncludedDetails && diagnosticDetails.testIncludedDetails !== '' ? diagnosticDetails.testIncludedDetails : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Test Code: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.testCode && diagnosticDetails.testCode !== '' ? diagnosticDetails.testCode : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Tags: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.tags && diagnosticDetails.tags !== '' ? diagnosticDetails.tags : 'NA'}}</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>SSP Margin(%): </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.SSP_Margin && diagnosticDetails.SSP_Margin !== '' ? diagnosticDetails.SSP_Margin : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>SS Margin(%): </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.SS_Margin && diagnosticDetails.SS_Margin !== '' ? diagnosticDetails.SS_Margin : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Discount (%): </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.discount && diagnosticDetails.discount !== '' ? diagnosticDetails.discount : 'NA'}}</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Cost To Company: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.costToCompany && diagnosticDetails.costToCompany !== '' ? diagnosticDetails.costToCompany : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>GST(%): </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.gst && diagnosticDetails.gst !== '' ? diagnosticDetails.gst : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Creation Date: </strong></span>
+                           <span class="float-right" *ngIf="!!diagnosticDetails.createdAt && diagnosticDetails.createdAt !== ''">{{diagnosticDetails.createdAt | date: 'dd-MM-yyyy'}}</span>
+                           <span class="float-right" *ngIf="!!diagnosticDetails.createdAt && diagnosticDetails.createdAt === ''">NA</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Method: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.method && diagnosticDetails.method !== '' ? diagnosticDetails.method : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>MRP: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.mrp && diagnosticDetails.mrp !== '' ? diagnosticDetails.mrp : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Available: </strong></span>
+                           <span class="float-right" *ngIf="diagnosticDetails?.isAvailable === true">Yes</span>
+                           <span class="float-right" *ngIf="diagnosticDetails?.isAvailable === false">No</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Sub-Category: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.subcategory && diagnosticDetails.subcategory !== '' ? diagnosticDetails.subcategory : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Category: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.category && diagnosticDetails.category !== '' ? diagnosticDetails.category : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>No. of Test: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.noOfTests && diagnosticDetails.noOfTests !== '' ? diagnosticDetails.noOfTests : 'NA'}}</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Precautions: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.precautions && diagnosticDetails.precautions !== '' ? diagnosticDetails.precautions : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Result Time: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.resultTime && diagnosticDetails.resultTime !== '' ? diagnosticDetails.resultTime : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Total Margin: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.totalMargin && diagnosticDetails.totalMargin !== '' ? diagnosticDetails.totalMargin : 'NA'}}</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Schedule: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.schedule && diagnosticDetails.schedule !== '' ? diagnosticDetails.schedule : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>SKU: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.sku && diagnosticDetails.sku !== '' ? diagnosticDetails.sku : 'NA'}}</span>
+                        </td>
+                        <td>
+                           <span><strong>Sample Type: </strong></span>
+                           <span class="float-right">{{!!diagnosticDetails.sampleType && diagnosticDetails.sampleType !== '' ? diagnosticDetails.sampleType : 'NA'}}</span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <span><strong>Updated At: </strong></span>
+                           <span class="float-right" *ngIf="!!diagnosticDetails.updatedAt && diagnosticDetails.updatedAt !== ''">{{diagnosticDetails.updatedAt | date: 'medium'}}</span>
+                           <span class="float-right" *ngIf="!!diagnosticDetails.updatedAt && diagnosticDetails.updatedAt === ''">NA</span>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <table class="table table-bordered image-table">
+                  <tbody>
+                     <tr>
+                        <td>
+                           <p><strong>Test Image: </strong></p>
+                           <div class="d-flex" *ngIf="!!diagnosticDetails.testImages && diagnosticDetails?.testImages.length != 0">
+                              <div class="m-1" *ngFor="let item of diagnosticDetails?.testImages;">
+                                 <img src="{{item}}" alt="{{diagnosticDetails?.testName}}" class="view-thumbnail-img" *ngIf="(item.includes('jpeg')) || (item.includes('png')) || (item.includes('jpg'))" data-toggle="tooltip" data-placement="bottom" title="View Lab Image" data-toggle="modal" data-target="#openImageModal" (click)="openSpecificImage(item)">
+                                 <img src="../../../../../assets/img/PDF.svg" alt="{{diagnosticDetails?.testName}}" class="view-thumbnail-img" *ngIf="(item.includes('.pdf'))" data-toggle="tooltip" data-placement="bottom" title="View Lab PDFs" (click)="viewPDF(item)">
+                              </div>
+                           </div>
+                           <div *ngIf="!(!!diagnosticDetails.testImages) || diagnosticDetails?.testImages.length === 0 || diagnosticDetails?.testImages[0] === ''">
+                              <img src="../../../../../assets/img/dummy.png" alt="Dummy Image" class="view-thumbnail-img" data-toggle="tooltip" data-placement="bottom" title="No Image Available" (click)="toasterAlert()">
+                           </div>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <div class="text-left my-2 d-block">
+               <p class="text-muted"><small>*NA : Not Available</small></p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="openImageModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="viewImageModalLabel">Lab Image</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+         </div>
+         <div class="modal-body" *ngIf="!!specificImageData">
+            <p><small><strong>Note: &nbsp;</strong>Please click on the image to download.</small></p>
+            <a href="{{specificImageData}}" download>
+               <img src="{{specificImageData}}" class="img-fluid w-100 h-100" alt="Image Details">
+            </a>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-outline-secondary w-25" type="button" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>

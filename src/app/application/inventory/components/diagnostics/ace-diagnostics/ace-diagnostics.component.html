@@ -1,0 +1,305 @@
+<!-- Add Vendor -->
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4" *ngIf="!!diagnosticDataFormType && diagnosticDataFormType !== ''">
+      <h1 class="h3 mb-0 text-gray-800 text-capitalize">{{diagnosticDataFormType}} Diagnostics</h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa fa-upload fa-sm text-white-50"></i> Import/Export</a> -->
+      <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" [routerLink]="['/app/inventory/diagnostics']" [queryParams]="{ pageSize: 50, currentPage: 1}"><i class="fa fa-angle-left"></i>&nbsp; Back</a>
+   </div>
+   <div class="d-flex justify-content-center" *ngIf="!(diagnosticdetailsForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-5">
+      <div class="col-xl-12 col-lg-12">
+         <form class="user needs-validation" novalidate [formGroup]="diagnosticdetailsForm" #vendorForm="ngForm" (ngSubmit)="onSubmit(vendorForm)" *ngIf="diagnosticdetailsForm">
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4" *ngIf="!!vendorListData && vendorListData.length > 0">
+                     <label for="services">Vendor<span>*</span></label>
+                     <ng-select
+                     [options]="vendorListData"
+                     bindValue="value"
+                     bindLabel="value"
+                     [multiple]="false"
+                     [closeOnSelect]="false"
+                     [searchable]="true"
+                     placeholder="Select Vendor"
+                     clearAllText="Clear"
+                     formControlName="vendorId"
+                     name="vendorId"
+                     id="vendorId"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.vendorId.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && diagnosticcheckout.vendorId.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.vendorId.errors.required">Vendor is required</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4" *ngIf="!!typeDropdownData && typeDropdownData.length > 0">
+                     <label for="category">Category<span>*</span></label>
+                     <!-- (ngModelChange)="getCategoryByid(diagnosticdetailsForm.value.category)" -->
+                     <ng-select
+                     [options]="typeDropdownData"
+                     [multiple]="false"
+                     placeholder="Select Category"
+                     clearAllText="Clear"
+                     formControlName="category"
+                     bindValue="value"
+                     bindLabel="value"
+                     name="category"
+                     id="category"
+                     class="form-control bg-light custom"
+                     [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.category.errors }"
+                     >
+                     </ng-select>
+                     <div *ngIf="submitted && diagnosticcheckout.category.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.category.errors.required">Category is required</div>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="d-block"><label class="control-label">Is Test available?</label></div>
+                     <div class="d-flex">
+                        <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="isAvailable" id="availableYes" [value]='true' formControlName="isAvailable"/>
+                           <label class="custom-control-label" for="availableYes">Yes</label>
+                         </div>
+                         <div class="custom-control custom-radio custom-control-inline">
+                           <input type="radio" class="custom-control-input" name="isAvailable" id="availableNo" [value]='false' formControlName="isAvailable"/>
+                           <label class="custom-control-label" for="availableNo">No</label>
+                         </div>
+                     </div>
+                     <div class="d-block">
+                        <div class="py-1" *ngIf="submitted && diagnosticcheckout.isAvailable.errors">
+                           <p class="text-danger error-message m-0" *ngIf="diagnosticcheckout.isAvailable.errors.required">Please select availability</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="testName">Test Name<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="50" class="form-control bg-light" id="testName" placeholder="Blood Sugar" formControlName="testName" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.testName.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.testName.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.testName.errors.required">Name is required</div>
+                        <div *ngIf="diagnosticcheckout.testName.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="noOfTests">No. of Test Required</label>
+                     <input type="text" minlength="1" maxlength="5" class="form-control bg-light" id="noOfTests" placeholder="2" formControlName="noOfTests" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.noOfTests.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.noOfTests.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.noOfTests.errors.pattern">Should contain only number</div>
+                        <div *ngIf="diagnosticcheckout.noOfTests.errors.minlength">Should be minimum 1 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="resultTime">Result Time (Days/Hours)<span>*</span></label>
+                     <input type="text" minlength="3" maxlength="15" class="form-control bg-light" id="resultTime" placeholder="24 Hours" formControlName="resultTime" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.resultTime.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.resultTime.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.resultTime.errors.required">Result Time is required</div>
+                        <div *ngIf="diagnosticcheckout.resultTime.errors.pattern">Only (-) allowed</div>
+                        <div *ngIf="diagnosticcheckout.resultTime.errors.minlength">Name should be minimum 3 characters</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="schedule">Schedule<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Every 4 Months" id="schedule" formControlName="schedule" name="schedule" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.schedule.errors }"></textarea>
+                     <div *ngIf="submitted && diagnosticcheckout.schedule.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.schedule.errors.required">Schedule is required</div>
+                        <div *ngIf="diagnosticcheckout.schedule.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="precautions">Precautions<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="3" maxlength="1000" placeholder="Do not eat or drink anything before test" id="precautions" formControlName="precautions" name="precautions" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.precautions.errors }"></textarea>
+                     <div *ngIf="submitted && diagnosticcheckout.precautions.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.precautions.errors.required">Precautions is required</div>
+                        <div *ngIf="diagnosticcheckout.precautions.errors.minlength">Should be minimum 3 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="sampleType">Sample Type<span>*</span></label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="2" maxlength="1000" placeholder="Blood" id="sampleType" formControlName="sampleType" name="sampleType" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.sampleType.errors }"></textarea>
+                     <div *ngIf="submitted && diagnosticcheckout.sampleType.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.sampleType.errors.required">Sample Type is required</div>
+                        <div *ngIf="diagnosticcheckout.sampleType.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="method">Method</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="2" maxlength="1000" placeholder="Microscopic" id="method" formControlName="method" name="method" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.method.errors }"></textarea>
+                     <div *ngIf="submitted && diagnosticcheckout.method.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.method.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="tags">Tags</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="2" maxlength="1000" placeholder="LFT, Liver" id="tags" formControlName="tags" name="tags" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.tags.errors }"></textarea>
+                     <div *ngIf="submitted && diagnosticcheckout.tags.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.tags.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="testIncludedDetails">Tests Included</label>
+                     <textarea class="form-control bg-light" rows="3" cols="50" minlength="2" maxlength="1000" placeholder=" Blood Urea" id="testIncludedDetails" formControlName="testIncludedDetails" name="testIncludedDetails" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.testIncludedDetails.errors }"></textarea>
+                     <div *ngIf="submitted && diagnosticcheckout.testIncludedDetails.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.testIncludedDetails.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="costtocompany">Cost to company (Rs.)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="10" class="form-control bg-light" id="costtocompany" placeholder="33.89" formControlName="costToCompany" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.costToCompany.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.costToCompany.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.costToCompany.errors.required">Cost is required</div>
+                        <div *ngIf="diagnosticcheckout.costToCompany.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.costToCompany.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="totalMargin">Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="totalMargin" placeholder="20" formControlName="totalMargin" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.totalMargin.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.totalMargin.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.totalMargin.errors.required">Margin is required</div>
+                        <div *ngIf="diagnosticcheckout.totalMargin.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.totalMargin.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="SS_Margin">SS Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="SS_Margin" placeholder="20" formControlName="SS_Margin" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.SS_Margin.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.SS_Margin.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.SS_Margin.errors.required">Margin is required</div>
+                        <div *ngIf="diagnosticcheckout.SS_Margin.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.SS_Margin.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="SSP_Margin">SSP Margin(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="SSP_Margin" placeholder="20" formControlName="SSP_Margin" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.SSP_Margin.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.SSP_Margin.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.SSP_Margin.errors.required">Margin is required</div>
+                        <div *ngIf="diagnosticcheckout.SSP_Margin.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.SSP_Margin.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="mrp">MRP (Rs.)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="10" class="form-control bg-light" id="mrp" placeholder="18.89" formControlName="mrp" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.mrp.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.mrp.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.mrp.errors.required">MRP is required</div>
+                        <div *ngIf="diagnosticcheckout.mrp.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.mrp.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="gst">GST(%)<span>*</span></label>
+                     <input type="text" minlength="1" maxlength="4" class="form-control bg-light" id="gst" placeholder="23" formControlName="gst" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.gst.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.gst.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.gst.errors.required">GST is required</div>
+                        <div *ngIf="diagnosticcheckout.gst.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.gst.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="sku">SKU</label>
+                     <input type="text" minlength="3" maxlength="10" class="form-control bg-light" id="sku" placeholder="32327392" formControlName="sku" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.sku.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.sku.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.sku.errors.pattern">Should contain only numbers</div>
+                        <div *ngIf="diagnosticcheckout.sku.errors.minlength">Should be minimum 3 number</div>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="testCode">Test Code/ID</label>
+                     <input type="text" minlength="2" maxlength="15" class="form-control bg-light" oninput="this.value = this.value.toUpperCase()" id="testCode" placeholder="98329U878IU" formControlName="testCode" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.testCode.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.testCode.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.testCode.errors.pattern">No Space / Special Characters allowed</div>
+                        <div *ngIf="diagnosticcheckout.testCode.errors.minlength">Should be minimum 2 characters</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="discount">Discount(%)</label>
+                     <input type="text" minlength="1" maxlength="10" class="form-control bg-light" id="discount" placeholder="5" formControlName="discount" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.discount.errors }">
+                     <div *ngIf="submitted && diagnosticcheckout.discount.errors" class="invalid-feedback">
+                        <div *ngIf="diagnosticcheckout.discount.errors.pattern">Should be only numeric/decimal</div>
+                        <div *ngIf="diagnosticcheckout.discount.errors.minlength">Should be minimum 1 number</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card shadow mb-4">
+            <div class="card-body">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label>Upload Lab Images</label>
+                     <button type="button" class="btn btn-secondary btn-circle mx-3" (click)="fileInput.click()">
+                        <i class="fa fa-plus"></i>
+                     </button>
+                     <input style="display: none" #fileInput multiple type="file" (change)="fileProgressdiagnostic($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="testImages">
+                     <!-- <div class="custom-file mb-4">
+                        <input type="file" multiple class="custom-file-input" id="uploadpancard" (change)="fileProgressdiagnostic($event)" data-max-size="32154" accept="image/jpeg, image/png" formControlName="testImages" [ngClass]="{ 'is-invalid': submitted && diagnosticcheckout.testImages.errors }">
+                        <label class="custom-file-label bg-light" for="uploadpancard">Choose file...</label>
+                        <div *ngIf="submitted && diagnosticcheckout.testImages.errors" class="invalid-feedback">
+                           <div *ngIf="diagnosticcheckout.testImages.errors.required">Atleast one image is required</div>
+                        </div>
+                     </div> -->
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="d-flex flex-wrap">
+                     <div class="m-1" *ngFor="let url of previewUrltestimages;let index = index">
+                        <div class="text-center">
+                           <img [src]="url" alt="Lab Image" class="view-thumbnail-img">
+                        </div>
+                        <div class="text-center">
+                           <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="removeSelectedFile(index)"><i class="fa fa-trash"></i></button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="d-flex flex-wrap" *ngIf="(!!diagnosticDetails && !!diagnosticDetails.testImages && diagnosticDetails.testImages.length != 0) && diagnosticDataFormType !== 'add'">
+                     <div class="m-1" *ngFor="let item of diagnosticDetails?.testImages;">
+                        <img [src]="item" alt="Lab Image" class="view-thumbnail-img">
+                        <div class="text-center">
+                           <button type="button" class="btn btn-danger btn-circle btn-sm" (click)="deleteImage(item)"><i class="fa fa-trash"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <p class="text-muted" *ngIf="(!!diagnosticDetails && !!diagnosticDetails.testImages && diagnosticDetails.testImages.length != 0) && diagnosticDataFormType !== 'add'"><small>Note: Old Images will be deleted in case you add new image.</small></p>
+            </div>
+         </div>
+         <div class="form-row">
+            <div class="col-md-6">
+               <button class="btn btn-secondary w-25" type="submit">Submit</button>
+               <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()" [routerLink]="['/app/inventory/diagnostics']" [queryParams]="{ pageSize: 50, currentPage: 1}">Cancel</button>
+            </div>
+         </div>
+         </form>
+      </div>
+   </div>
+</div>

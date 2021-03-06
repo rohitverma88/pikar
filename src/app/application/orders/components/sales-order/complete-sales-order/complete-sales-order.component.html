@@ -1,0 +1,39 @@
+<div class="container-fluid">
+   <!-- Page Heading -->
+   <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Process Order</h1>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="backtoListing()"><i class="fa fa-angle-left"></i>&nbsp; Back</button>
+   </div>
+   <!-- Page Body -->
+   <div class="d-flex justify-content-center" *ngIf="!(completeOrderForm)">
+      <div class="my-5">
+         <button class="btn btn-outline-secondary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+         </button>
+      </div>
+    </div>
+   <div class="row pb-4" *ngIf="!!orderDetails && orderDetails !== null">
+      <div class="col-xl-12 col-lg-12">
+         <div class="card shadow p-4">
+            <form class="user needs-validation" novalidate [formGroup]="completeOrderForm" #orderCompleteForm="ngForm" (ngSubmit)="onSubmit(orderCompleteForm)" *ngIf="completeOrderForm">
+               <div class="form-row">
+                  <div class="form-group col-md-4">
+                     <label for="orderId">Order ID<span>*</span></label>
+                     <input type="text" class="form-control bg-light" id="orderId" placeholder="ODI002123" formControlName="orderId" [ngClass]="{ 'is-invalid': submitted && ordercheckout.orderId.errors }">
+                     <div *ngIf="submitted && ordercheckout.orderId.errors" class="invalid-feedback">
+                        <div *ngIf="ordercheckout.orderId.errors.required">Order ID is required</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="col-md-6">
+                     <button class="btn btn-secondary w-25" type="submit">Submit</button>
+                     <button class="btn btn-outline-secondary mx-2 w-25" type="button" (click)="onReset()">Cancel</button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
