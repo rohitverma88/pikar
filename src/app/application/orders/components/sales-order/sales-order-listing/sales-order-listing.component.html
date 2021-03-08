@@ -35,6 +35,38 @@
                   <a href="javascript:void(0)" (click)="removeFilters()">Clear All Filters</a>
                 </small>
             </div>
+
+
+
+            <table id="excel-table" [style.display]="'none'"> 
+               <tr>       
+                  <th>Sr No.</th> 
+                  <th>Order ID</th>  
+                  <th>SSP ID</th> 
+                  <th>Channel</th>   
+                  <th>Amount</th> 
+                  <th>Category</th>  
+                  <th>Current Status</th> 
+                  <th>Order Date</th>
+                   
+               </tr>    
+               <tr *ngFor="let sup of rows">
+             
+                  <td>{{ sup.s_no }}</td>  
+                  <td>{{ sup.orderId }}</td> 
+                  <td>{{ sup.sspId }}</td> 
+                  <td>{{ sup.channel }}</td> 
+                  <td>{{ sup.amount }}</td>  
+                  <td>{{ sup.orderCategory }}</td> 
+                  <td>{{ sup.activeStatus }}</td> 
+                  <td>{{ sup.orderDateTime }}</td> 
+                
+               </tr> 
+           </table>
+
+
+
+
             <div class="card shadow mb-4 order-listing">
                <ngx-datatable
                   #myTable
@@ -189,7 +221,13 @@
                         let-offset="offset"
                         >
                         <div class="w-25" style="padding: 5px 10px">
-                           <div> Showing {{((curPage - 1) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} order of {{rowCount}} Orders </div>
+                           <!-- <div> Showing {{((curPage - 1) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} order of {{rowCount}} Orders </div> -->
+                           <div>
+                              Showing {{((curPage - 2) * pageSize)+1}} - {{ 
+                                 ((curPage-1)*pageSize)}} order of 
+                                 {{(rowCount)}} Orders
+                            </div>
+
                         </div>
                         <datatable-pager
                         [pagerLeftArrowIcon]="'datatable-icon-left'"

@@ -32,6 +32,40 @@
                   <a href="javascript:void(0)" (click)="removeFilters()">Clear All Filters</a>
                 </small>
             </div>
+
+
+            <table id="excel-table" [style.display]="'none'"> 
+               <tr>       
+                  <th>Sr No.</th> 
+                  <th>SSP ID</th>  
+                  <th>SSP Name</th> 
+                  <th>Mob. No.</th>   
+                  <th>City</th> 
+                  <th>State</th>  
+                  <th>Reg. Date</th> 
+                  <th>Total Sale Amt.</th> 
+                  <th>Outstanding Amt.</th>  
+                  <th>Total Sale Count</th> 
+               </tr>    
+               <tr *ngFor="let sup of rows">
+             
+                  <td>{{ sup.s_no }}</td>  
+                  <td>{{ sup.sspId }}</td> 
+                  <td>{{ sup.name }}</td> 
+                  <td>{{ sup.mobile }}</td> 
+                  <td>{{ sup.city }}</td>  
+                  <td>{{ sup.state }}</td> 
+                  <td>{{ sup.registrationDate }}</td> 
+                  <td>{{ sup.totalSaleAmount }}</td>  
+                  <td>{{ sup.outstandingAmount }}</td> 
+                  <td>{{ sup.TotalSaleCount }}</td>
+                
+               </tr> 
+           </table>
+
+
+
+
             <div class="card shadow mb-4">
                <ngx-datatable
                   class="material striped"

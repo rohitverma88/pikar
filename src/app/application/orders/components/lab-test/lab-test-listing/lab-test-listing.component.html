@@ -31,6 +31,36 @@
                   <a href="javascript:void(0)" (click)="removeFilters()">Clear All Filters</a>
                 </small>
             </div>
+
+
+
+            <table id="excel-table" [style.display]="'none'"> 
+               <tr>       
+                  <th>Sr No.</th> 
+                  <th>Booking ID</th>  
+                  <th>Booking Type</th> 
+                  <th>Booking Date</th>   
+                  <th>Amount</th> 
+                  <th>Status</th>  
+                  <th>Vendor ID</th> 
+                   
+               </tr>    
+               <tr *ngFor="let sup of rows">
+             
+                  <td>{{ sup.s_no }}</td>  
+                  <td>{{ sup.bookingId }}</td> 
+                  <td>{{ sup.bookingType }}</td> 
+                  <td>{{ sup.bookingDate }}</td> 
+                  <td>{{ sup.amount }}</td>  
+                  <td>{{ sup.status }}</td> 
+                  <td>{{ sup.vendorId }}</td> 
+                
+               </tr> 
+           </table>
+
+
+
+
             <div class="card shadow mb-4 order-listing">
                <ngx-datatable
                   #myTable

@@ -15,6 +15,7 @@ import { ExportFile } from 'src/app/core/utilities/export-file';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import * as moment from 'moment';
 import * as XLSX from 'xlsx';
+import { ConsoleService } from '@ng-select/ng-select/lib/console.service';
 declare var $:any;
 @Component({
   selector: 'app-diagnostics-listing',
@@ -54,6 +55,7 @@ selectService: string[];
   ];
   searchField: FormControl;
   searchForm: FormGroup;
+  startPage;
   filterObj = {
     search: '',
     pageSize: 50,
@@ -142,6 +144,8 @@ selectService: string[];
             this.rows = response.response.data;
             console.log(this.rows);
             this.pages = response.response.metadata;
+            console.log(this.filterObj.currentPage)
+            this.startPage = Number(this.filterObj.currentPage) + ((Number(this.filterObj.currentPage - 1) * Number(this.rows.length - 1)))
           } else {
             this.rows = [];
             this.pages = {};

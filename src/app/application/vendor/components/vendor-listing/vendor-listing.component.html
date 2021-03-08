@@ -32,6 +32,40 @@
                   <a href="javascript:void(0)" (click)="removeFilters()">Clear All Filters</a>
                 </small>
             </div>
+
+
+
+            <table id="excel-table" [style.display]="'none'"> 
+               <tr>       
+                  <th>Sr No.</th> 
+                  <th>Vendor ID</th> 
+                  <th>Vendor Name</th>   
+                  <th>Contact No.</th> 
+                  <th>City/State</th>  
+                  <th>Type</th> 
+                  <th>Category</th> 
+                  <th>Sale Amt.</th> 
+                  <th>Outstanding Amt.</th> 
+                   
+               </tr>    
+               <tr *ngFor="let sup of rows">
+             
+                  <td>{{ sup.s_no }}</td>  
+                  <td>{{ sup.vendorId }}</td> 
+                  <td>{{ sup.vendorName }}</td> 
+                  <td>{{ sup.mobile }}</td> 
+                  <td>{{ sup.location?.city }} / {{ sup.location?.state }}</td>  
+                  <td>{{ sup.type }}</td> 
+                  <td>{{ sup.category }}</td> 
+                  <td>{{ sup.totalSaleAmount }}</td> 
+                  <td>{{ sup.outstandingAmount }}</td> 
+                
+               </tr> 
+           </table>
+
+
+
+
             <div class="card shadow mb-4">
                <ngx-datatable
                   class="material striped"
@@ -87,6 +121,7 @@
                         >
                         <div class="w-25" style="padding: 5px 10px">
                            <div> Showing {{((curPage - 1) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} vendor of {{rowCount}} vendors </div>
+                          
                         </div>
                         <datatable-pager
                         [pagerLeftArrowIcon]="'datatable-icon-left'"

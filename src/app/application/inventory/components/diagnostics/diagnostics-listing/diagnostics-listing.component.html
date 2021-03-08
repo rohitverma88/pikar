@@ -34,7 +34,7 @@
             </div>
 
 
-<!-- ?? -->
+<!-- ?? `-->
 
             <table id="excel-table" [style.display]="'none'"> 
                <tr>       
@@ -114,6 +114,7 @@
                         >
                         <div class="w-25" style="padding: 5px 10px">
                            <!-- <div> Showing {{((curPage - 2) * pageSize) + 1 }} - {{pageSize > rowCount ? rowCount : ((pageSize * curPage) > rowCount ? rowCount : pageSize * curPage)}} tests of {{rowCount}} Diagnostics </div> -->
+                           
 
                            <!-- <div>
                               Rows: {{rowCount}} |
@@ -124,9 +125,9 @@
                             </div> -->
 
                             <div>
-                              Showing {{((curPage - 2) * pageSize)+1}} - {{ 
-                                 ((curPage-1)*pageSize)}} tests of 
-                                 {{(rowCount)}} Diagnostics
+                               <!-- {{console.log(i)}} -->
+                               Showing {{ startPage }} to 
+                              {{filterObj.currentPage * filterObj.pageSize}} of {{rowCount}} Diagnostics
                             </div>
 
                            

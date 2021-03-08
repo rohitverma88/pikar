@@ -148,6 +148,7 @@ selectService: string[];
         if (!!response && response.success === true) {
           if (!!response.response.data && response.response.data.length > 0) {
             this.rows = response.response.data;
+            console.log(this.rows);
             this.pages = response.response.metadata;
           } else {
             this.rows = [];

@@ -14,6 +14,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 import { ExportFile } from 'src/app/core/utilities/export-file';
 import * as moment from 'moment';
+import * as XLSX from 'xlsx';
 import { sspAdminService } from '../../services/ssp-admin.service';
 declare var $:any;
 @Component({
@@ -22,6 +23,7 @@ declare var $:any;
   styleUrls: ['./ssp-admin-listing.component.scss']
 })
 export class SspAdminListingComponent implements OnInit {
+  fileName= 'ExcelSheet.xlsx';
 maxDate: Date;
 minDate: Date;
 exportFileEntity = new ExportFile(this.auth, this.toastrService);
@@ -139,13 +141,39 @@ selectService: string[];
   }
   // End of the Above Code
   // Method: used to export the data
+
+  // exportFile() {
+  //   const isConfirmed = confirm('Do you want to export the list?');
+  //   if (isConfirmed === true) {
+  //     const tempUrlQuery = ProductUtilities.generateQueryString(this.filterObj);
+  //     this.exportFileEntity.getExportData('ssp-admin/listing', tempUrlQuery);
+  //   }
+  // }
+
   exportFile() {
     const isConfirmed = confirm('Do you want to export the list?');
     if (isConfirmed === true) {
-      const tempUrlQuery = ProductUtilities.generateQueryString(this.filterObj);
-      this.exportFileEntity.getExportData('ssp-admin/listing', tempUrlQuery);
+      // const tempUrlQuery = ProductUtilities.generateQueryString(this.filterObj);
+      // this.exportFileEntity.getExportData('inventory/products', tempUrlQuery);
+      // console.log(this.filterObj)
+
+  /* table id is passed over here */   
+  let element = document.getElementById('excel-table'); 
+  const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+  
+
+  /* generate workbook and add the worksheet */
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  
+  /* save to file */
+  XLSX.writeFile(wb, this.fileName);
+
     }
   }
+
+
+
   // Method: which is used to fetch the vendor list from the BE
   getSSPListingData(){
     this.router.events.subscribe((evt) => {
@@ -160,6 +188,7 @@ selectService: string[];
         if (!!response && response.success === true) {
           if (!!response.response.data && response.response.data.length > 0) {
             this.rows = response.response.data;
+            console.log(this.rows)
             this.pages = response.response.metadata;
           } else {
             this.rows = [];

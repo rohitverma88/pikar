@@ -44,6 +44,7 @@ export class ViewMedicineComponent {
         if ( response.success === true) {
           if (!!response.response.data && response.response.data !== null) {
             this.medicineDetails = response.response.data;
+            console.log(this.medicineDetails)
           } else {
             this.toastrService.showError('Error', 'Something went wrong. Please try again later!');
             this.router.navigate(['/app/inventory/medicine'], { queryParams: {  perPage: 50, currentPage: 1} });

@@ -114,6 +114,18 @@
                            <span><strong>SS Margin: </strong></span>
                            <span class="float-right">{{!!medicineDetails.SS_Margin && medicineDetails.SS_Margin !== '' ? medicineDetails.SS_Margin : 'NA'}}</span>
                         </td>
+                        <td>
+                           <span><strong>Creation Date: </strong></span>
+                           <span class="float-right" *ngIf="!!medicineDetails.createdAt && medicineDetails.createdAt !== ''">{{medicineDetails.createdAt | date: 'dd-MM-yyyy'}}</span>
+                           <span class="float-right" *ngIf="!!medicineDetails.createdAt && medicineDetails.createdAt === ''">NA</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                           <span><strong>Updated At: </strong></span>
+                           <span class="float-right" *ngIf="!!medicineDetails.updatedAt && medicineDetails.updatedAt !== ''">{{medicineDetails.updatedAt | date: 'medium'}}</span>
+                           <span class="float-right" *ngIf="!!medicineDetails.updatedAt && medicineDetails.updatedAt === ''">NA</span>
+                        </td>
                       </tr>
                    </tbody>
                 </table>
